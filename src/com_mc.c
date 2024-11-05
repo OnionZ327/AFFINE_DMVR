@@ -7125,23 +7125,23 @@ void process_AFFINEDMVR(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)
         com_sub_pel_error_surface(sadbuffer, deltaMv);
 
 #if AFFINE_MEMORY_CONSTRAINT
-        refined_mv[REFP_0][0][MV_X] = initial_mv[REFP_0][0][MV_X] + delta_mvx;
-        refined_mv[REFP_0][0][MV_Y] = initial_mv[REFP_0][0][MV_Y] + delta_mvy;
-        refined_mv[REFP_0][1][MV_X] = initial_mv[REFP_0][1][MV_X] + delta_mvx;
-        refined_mv[REFP_0][1][MV_Y] = initial_mv[REFP_0][1][MV_Y] + delta_mvy;
-        refined_mv[REFP_0][2][MV_X] = initial_mv[REFP_0][2][MV_X] + delta_mvx;
-        refined_mv[REFP_0][2][MV_Y] = initial_mv[REFP_0][2][MV_Y] + delta_mvy;
-        refined_mv[REFP_0][3][MV_X] = initial_mv[REFP_0][3][MV_X] + delta_mvx;
-        refined_mv[REFP_0][3][MV_Y] = initial_mv[REFP_0][3][MV_Y] + delta_mvy;
+        refined_mv[REFP_0][0][MV_X] = initial_mv[REFP_0][0][MV_X] + (delta_mvx + (deltaMv[MV_X] >> 2));
+        refined_mv[REFP_0][0][MV_Y] = initial_mv[REFP_0][0][MV_Y] + (delta_mvy + (deltaMv[MV_Y] >> 2));
+        refined_mv[REFP_0][1][MV_X] = initial_mv[REFP_0][1][MV_X] + (delta_mvx + (deltaMv[MV_X] >> 2));
+        refined_mv[REFP_0][1][MV_Y] = initial_mv[REFP_0][1][MV_Y] + (delta_mvy + (deltaMv[MV_Y] >> 2));
+        refined_mv[REFP_0][2][MV_X] = initial_mv[REFP_0][2][MV_X] + (delta_mvx + (deltaMv[MV_X] >> 2));
+        refined_mv[REFP_0][2][MV_Y] = initial_mv[REFP_0][2][MV_Y] + (delta_mvy + (deltaMv[MV_Y] >> 2));
+        refined_mv[REFP_0][3][MV_X] = initial_mv[REFP_0][3][MV_X] + (delta_mvx + (deltaMv[MV_X] >> 2));
+        refined_mv[REFP_0][3][MV_Y] = initial_mv[REFP_0][3][MV_Y] + (delta_mvy + (deltaMv[MV_Y] >> 2));
 
-        refined_mv[REFP_1][0][MV_X] = initial_mv[REFP_1][0][MV_X] - delta_mvx;
-        refined_mv[REFP_1][0][MV_Y] = initial_mv[REFP_1][0][MV_Y] - delta_mvy;
-        refined_mv[REFP_1][1][MV_X] = initial_mv[REFP_1][1][MV_X] - delta_mvx;
-        refined_mv[REFP_1][1][MV_Y] = initial_mv[REFP_1][1][MV_Y] - delta_mvy;
-        refined_mv[REFP_1][2][MV_X] = initial_mv[REFP_1][2][MV_X] - delta_mvx;
-        refined_mv[REFP_1][2][MV_Y] = initial_mv[REFP_1][2][MV_Y] - delta_mvy;
-        refined_mv[REFP_1][3][MV_X] = initial_mv[REFP_1][3][MV_X] - delta_mvx;
-        refined_mv[REFP_1][3][MV_Y] = initial_mv[REFP_1][3][MV_Y] - delta_mvy;
+        refined_mv[REFP_1][0][MV_X] = initial_mv[REFP_1][0][MV_X] - (delta_mvx + (deltaMv[MV_X] >> 2));
+        refined_mv[REFP_1][0][MV_Y] = initial_mv[REFP_1][0][MV_Y] - (delta_mvy + (deltaMv[MV_Y] >> 2));
+        refined_mv[REFP_1][1][MV_X] = initial_mv[REFP_1][1][MV_X] - (delta_mvx + (deltaMv[MV_X] >> 2));
+        refined_mv[REFP_1][1][MV_Y] = initial_mv[REFP_1][1][MV_Y] - (delta_mvy + (deltaMv[MV_Y] >> 2));
+        refined_mv[REFP_1][2][MV_X] = initial_mv[REFP_1][2][MV_X] - (delta_mvx + (deltaMv[MV_X] >> 2));
+        refined_mv[REFP_1][2][MV_Y] = initial_mv[REFP_1][2][MV_Y] - (delta_mvy + (deltaMv[MV_Y] >> 2));
+        refined_mv[REFP_1][3][MV_X] = initial_mv[REFP_1][3][MV_X] - (delta_mvx + (deltaMv[MV_X] >> 2));
+        refined_mv[REFP_1][3][MV_Y] = initial_mv[REFP_1][3][MV_Y] - (delta_mvy + (deltaMv[MV_Y] >> 2));
         if (AFFINE_DMVR_memory_access(mod_info_curr, cu_width, cu_height, refined_mv))
         {
             delta_mvx += deltaMv[MV_X] >> 2;
