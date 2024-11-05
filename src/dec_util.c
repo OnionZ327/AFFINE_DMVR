@@ -550,8 +550,42 @@ void dec_derive_skip_direct_info(DEC_CTX * ctx, DEC_CORE * core
         }
         if (affine_dmvr_flag)
         {
+            for (lidx = 0; lidx < REFP_NUM; lidx++)
+            {
+                for (cp_idx = 0; cp_idx < mrg_list_cp_num[mrg_idx]; cp_idx++)
+                {
+                    {
+                        mod_info_curr->affine_mv[lidx][cp_idx][MV_X] = mrg_list_cp_mv[mrg_idx][lidx][cp_idx][MV_X];
+                        mod_info_curr->affine_mv[lidx][cp_idx][MV_Y] = mrg_list_cp_mv[mrg_idx][lidx][cp_idx][MV_Y];
+                    }
+                }
+            }
+
             process_AFFINEDMVR(&ctx->info, mod_info_curr, ctx->refp, bit_depth, sub_w, sub_h, mv);
+
+#if AFFINE_UMVE
+            for (lidx = 0; lidx < REFP_NUM; lidx++)
+            {
+                if (REFI_IS_VALID(mrg_list_refi[mrg_idx][lidx]))
+                {
+                    mod_info_curr->refi[lidx] = mrg_list_refi[mrg_idx][lidx];
+                    for (cp_idx = 0; cp_idx < mrg_list_cp_num[mrg_idx]; cp_idx++)
+                    {
+
+                        if (mod_info_curr->affine_umve_flag && cp_idx < 2)
+                        {
+                            s32 affine_umve_mvd[REFP_NUM][MV_D];
+                            derive_affine_umve_final_motion(mod_info_curr->refi, mod_info_curr->affine_umve_idx[cp_idx], affine_umve_mvd);
+                            mod_info_curr->affine_mv[lidx][cp_idx][MV_X] = (CPMV)COM_CLIP3(COM_CPMV_MIN, COM_CPMV_MAX, mod_info_curr->affine_mv[lidx][cp_idx][MV_X] + affine_umve_mvd[lidx][MV_X]);
+                            mod_info_curr->affine_mv[lidx][cp_idx][MV_Y] = (CPMV)COM_CLIP3(COM_CPMV_MIN, COM_CPMV_MAX, mod_info_curr->affine_mv[lidx][cp_idx][MV_Y] + affine_umve_mvd[lidx][MV_Y]);
+                        }
+
+                    }
+                }
+            }
+#endif
         }
+
 #endif
 #if BGC
         if (REFI_IS_VALID(mrg_list_refi[mrg_idx][REFP_0]) && REFI_IS_VALID(mrg_list_refi[mrg_idx][REFP_1]))
