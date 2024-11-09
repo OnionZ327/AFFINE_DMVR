@@ -5746,6 +5746,9 @@ static void analyze_affine_merge( ENC_CTX *ctx, ENC_CORE *core, double *cost_bes
         if (affine_dmvr_flag)
         {
             process_AFFINEDMVR(&ctx->info, mod_info_curr, ctx->refp, bit_depth, sub_w, sub_h, mv);
+#if AFFINE_PARA
+            process_AFFINEPARA(&ctx->info, mod_info_curr, ctx->refp, bit_depth, sub_w, sub_h, mv);
+#endif
         }
 #endif
 #if BGC
@@ -6094,6 +6097,9 @@ static void analyze_affine_umve(ENC_CTX *ctx, ENC_CORE *core, double *cost_best)
     if (affine_dmvr_flag)
     {
         process_AFFINEDMVR(&ctx->info, mod_info_curr, ctx->refp, bit_depth, sub_w, sub_h, mv);
+#if AFFINE_PARA
+        process_AFFINEPARA(&ctx->info, mod_info_curr, ctx->refp, bit_depth, sub_w, sub_h, mv);
+#endif
     }
     for (ver = 0; ver < mrg_list_cp_num[skip_idx_best]; ver++)
     {

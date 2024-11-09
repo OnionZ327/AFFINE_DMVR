@@ -1,0 +1,10 @@
+^E:\AFFINE_DMVR\APP\CMAKELISTS.TXT
+setlocal
+D:\NormalApp\CMake\bin\cmake.exe -SE:/AFFINE_DMVR -BE:/AFFINE_DMVR/build_cmake --check-stamp-file E:/AFFINE_DMVR/build_cmake/app/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

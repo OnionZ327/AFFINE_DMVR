@@ -304,6 +304,9 @@
 #if AFFINE_DMVR
 #define AFFINE_DMVR_ITER_COUNT             3
 #endif
+#if AFFINE_PARA
+#define AFFINE_PARA_ITER_COUNT             4
+#endif
 /* IC_AVS3 (START) */
 #if IPC
 #define NUM_RDO_WITH_IPC                    6        // number of additional RDO

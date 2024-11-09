@@ -145,6 +145,13 @@ extern COM_DMVR_MC_C ifvc_tbl_dmvr_mc_c[2][2];
 #endif
 #endif
 
+#if AFFINE_PARA
+void refine_cpmv(COM_MODE* mod_info_curr, int cp_num, int a[2], int b[2], int c[2], int d[2], int w, int h, CPMV(*cp_mv)[VER_NUM][MV_D], int num, int i);
+void com_affine_para_mc_lc(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)[REFP_NUM], pel(*affine_dmvr_y)[MAX_CU_DIM], CPMV cp_mv[REFP_NUM][VER_NUM][MV_D], int sub_w, int sub_h, int i, int bit_depth, int dmv_hor_x, int dmv_hor_y, int dmv_ver_x, int dmv_ver_y, int num);
+void get_initial_affine_para(COM_MODE* mod_info_curr, CPMV cp_mv[REFP_NUM][VER_NUM][MV_D], int* dmv_hor_x, int* dmv_hor_y, int* dmv_ver_x, int* dmv_ver_y);
+void process_AFFINEPARA(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)[REFP_NUM], int bit_depth, int sub_w, int sub_h, CPMV(*mv)[VER_NUM][MV_D]);
+#endif
+
 #if AFFINE_DMVR
 void process_AFFINEDMVR(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)[REFP_NUM], int bit_depth, int sub_w, int sub_h, CPMV(*mv)[VER_NUM][MV_D]);
 s32 SAD_AFFINE_DMVR(int w, int h, void* src1, void* src2, int bit_depth);

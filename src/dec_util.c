@@ -562,6 +562,9 @@ void dec_derive_skip_direct_info(DEC_CTX * ctx, DEC_CORE * core
             }
 
             process_AFFINEDMVR(&ctx->info, mod_info_curr, ctx->refp, bit_depth, sub_w, sub_h, mv);
+#if AFFINE_PARA
+            process_AFFINEPARA(&ctx->info, mod_info_curr, ctx->refp, bit_depth, sub_w, sub_h, mv);
+#endif
 
 #if AFFINE_UMVE
             for (lidx = 0; lidx < REFP_NUM; lidx++)

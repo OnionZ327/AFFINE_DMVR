@@ -6982,114 +6982,96 @@ void process_AFFINEDMVR(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)
     while (1)
     {
         dir = 0;
-        if (last_dir == 1)
+        switch (last_dir)
         {
+        case 1:
             cost_temp[2][1] = cost_temp[1][1];
             cost_temp[1][1] = cost_temp[0][1];
-        }
-        else if (last_dir == 2)
-        {
+            break;
+        case 2:
             cost_temp[0][1] = cost_temp[1][1];
             cost_temp[1][1] = cost_temp[2][1];
-        }
-        else if (last_dir == 3)
-        {
+            break;
+        case 3:
             cost_temp[1][2] = cost_temp[1][1];
             cost_temp[1][1] = cost_temp[1][0];
-        }
-        else if (last_dir == 4)
-        {
+            break;
+        case 4:
             cost_temp[1][0] = cost_temp[1][1];
             cost_temp[1][1] = cost_temp[1][2];
+            break;
+        default:
+            // 如果last_dir不等于1, 2, 3, 4时不做任何事情
+            break;
         }
+
         for (idx = 0; idx < 5; idx++)
         {
+
             if (last_dir != 0)
             {
                 if (idx == 0)
+                    continue;  // 跳过idx == 0的情况，避免不必要的计算
+                switch (last_dir)
                 {
-                    search_flag = 0;
-                }
-                if (last_dir == 1)
-                {
+                case 1:
+                    // 如果idx == 2时，不进行搜索
                     if (idx == 2)
-                    {
-                        search_flag = 0;
-                    }
-                }
-                else if (last_dir == 2)
-                {
+                        continue;  // 跳过idx==2
+                    break;
+                case 2:
+                    // 如果idx == 1时，不进行搜索
                     if (idx == 1)
-                    {
-                        search_flag = 0;
-                    }
-                }
-                else if (last_dir == 3)
-                {
+                        continue;  // 跳过idx==1
+                    break;
+                case 3:
+                    // 如果idx == 4时，不进行搜索
                     if (idx == 4)
-                    {
-                        search_flag = 0;
-                    }
-                }
-                else if (last_dir == 4)
-                {
+                        continue;  // 跳过idx==4
+                    break;
+                case 4:
+                    // 如果idx == 3时，不进行搜索
                     if (idx == 3)
-                    {
-                        search_flag = 0;
-                    }
+                        continue;  // 跳过idx==3
+                    break;
+                default:
+                    break;
                 }
             }
-            if (search_flag)
-            {
-                cp_mv[REFP_0][0][MV_X] = initial_mv[REFP_0][0][MV_X] + ((search_offset_x[idx] + delta_x) << 2);
-                cp_mv[REFP_0][0][MV_Y] = initial_mv[REFP_0][0][MV_Y] + ((search_offset_y[idx] + delta_y) << 2);
-                cp_mv[REFP_0][1][MV_X] = initial_mv[REFP_0][1][MV_X] + ((search_offset_x[idx] + delta_x) << 2);
-                cp_mv[REFP_0][1][MV_Y] = initial_mv[REFP_0][1][MV_Y] + ((search_offset_y[idx] + delta_y) << 2);
-                cp_mv[REFP_0][2][MV_X] = initial_mv[REFP_0][2][MV_X] + ((search_offset_x[idx] + delta_x) << 2);
-                cp_mv[REFP_0][2][MV_Y] = initial_mv[REFP_0][2][MV_Y] + ((search_offset_y[idx] + delta_y) << 2);
-                cp_mv[REFP_0][3][MV_X] = initial_mv[REFP_0][3][MV_X] + ((search_offset_x[idx] + delta_x) << 2);
-                cp_mv[REFP_0][3][MV_Y] = initial_mv[REFP_0][3][MV_Y] + ((search_offset_y[idx] + delta_y) << 2);
 
-                cp_mv[REFP_1][0][MV_X] = initial_mv[REFP_1][0][MV_X] - ((search_offset_x[idx] + delta_x) << 2);
-                cp_mv[REFP_1][0][MV_Y] = initial_mv[REFP_1][0][MV_Y] - ((search_offset_y[idx] + delta_y) << 2);
-                cp_mv[REFP_1][1][MV_X] = initial_mv[REFP_1][1][MV_X] - ((search_offset_x[idx] + delta_x) << 2);
-                cp_mv[REFP_1][1][MV_Y] = initial_mv[REFP_1][1][MV_Y] - ((search_offset_y[idx] + delta_y) << 2);
-                cp_mv[REFP_1][2][MV_X] = initial_mv[REFP_1][2][MV_X] - ((search_offset_x[idx] + delta_x) << 2);
-                cp_mv[REFP_1][2][MV_Y] = initial_mv[REFP_1][2][MV_Y] - ((search_offset_y[idx] + delta_y) << 2);
-                cp_mv[REFP_1][3][MV_X] = initial_mv[REFP_1][3][MV_X] - ((search_offset_x[idx] + delta_x) << 2);
-                cp_mv[REFP_1][3][MV_Y] = initial_mv[REFP_1][3][MV_Y] - ((search_offset_y[idx] + delta_y) << 2);
-                for (int i = 0; i < REFP_NUM; ++i)
+            for (int i = 0; i < REFP_NUM; i++)
+            {
+                for (int ver = 0; ver < cp_num; ver++)
                 {
-                    com_affine_dmvr_mc_lc(info, mod_info_curr, refp, affine_dmvr_y, cp_mv, sub_w, sub_h, i, bit_depth);
+                    cp_mv[i][ver][MV_X] = initial_mv[i][ver][MV_X] + ((search_offset_x[idx] + delta_x) << 2);
+                    cp_mv[i][ver][MV_Y] = initial_mv[i][ver][MV_Y] + ((search_offset_y[idx] + delta_y) << 2);
                 }
-                cost = SAD_AFFINE_DMVR(cu_width, cu_height, affine_dmvr_y[0], affine_dmvr_y[1], bit_depth);
-                if (cost < min_cost)
-                {
-                    min_cost = cost;
-                    dir = idx;
-                }
-                cost_temp[center_y + search_offset_y[idx]][center_x + search_offset_x[idx]] = cost;
             }
+
+            for (int i = 0; i < REFP_NUM; ++i)
+            {
+                com_affine_dmvr_mc_lc(info, mod_info_curr, refp, affine_dmvr_y, cp_mv, sub_w, sub_h, i, bit_depth);
+            }
+
+            cost = SAD_AFFINE_DMVR(cu_width, cu_height, affine_dmvr_y[0], affine_dmvr_y[1], bit_depth);
+            if (cost < min_cost)
+            {
+                min_cost = cost;
+                dir = idx;
+            }
+            cost_temp[center_y + search_offset_y[idx]][center_x + search_offset_x[idx]] = cost;
             search_flag = 1;
         }
-#if AFFINE_MEMORY_CONSTRAINT
-        refined_mv[REFP_0][0][MV_X] = initial_mv[REFP_0][0][MV_X] + ((delta_x + search_offset_x[dir]) << 2);
-        refined_mv[REFP_0][0][MV_Y] = initial_mv[REFP_0][0][MV_Y] + ((delta_y + search_offset_y[dir]) << 2);
-        refined_mv[REFP_0][1][MV_X] = initial_mv[REFP_0][1][MV_X] + ((delta_x + search_offset_x[dir]) << 2);
-        refined_mv[REFP_0][1][MV_Y] = initial_mv[REFP_0][1][MV_Y] + ((delta_y + search_offset_y[dir]) << 2);
-        refined_mv[REFP_0][2][MV_X] = initial_mv[REFP_0][2][MV_X] + ((delta_x + search_offset_x[dir]) << 2);
-        refined_mv[REFP_0][2][MV_Y] = initial_mv[REFP_0][2][MV_Y] + ((delta_y + search_offset_y[dir]) << 2);
-        refined_mv[REFP_0][3][MV_X] = initial_mv[REFP_0][3][MV_X] + ((delta_x + search_offset_x[dir]) << 2);
-        refined_mv[REFP_0][3][MV_Y] = initial_mv[REFP_0][3][MV_Y] + ((delta_y + search_offset_y[dir]) << 2);
 
-        refined_mv[REFP_1][0][MV_X] = initial_mv[REFP_1][0][MV_X] - ((delta_x + search_offset_x[dir]) << 2);
-        refined_mv[REFP_1][0][MV_Y] = initial_mv[REFP_1][0][MV_Y] - ((delta_y + search_offset_y[dir]) << 2);
-        refined_mv[REFP_1][1][MV_X] = initial_mv[REFP_1][1][MV_X] - ((delta_x + search_offset_x[dir]) << 2);
-        refined_mv[REFP_1][1][MV_Y] = initial_mv[REFP_1][1][MV_Y] - ((delta_y + search_offset_y[dir]) << 2);
-        refined_mv[REFP_1][2][MV_X] = initial_mv[REFP_1][2][MV_X] - ((delta_x + search_offset_x[dir]) << 2);
-        refined_mv[REFP_1][2][MV_Y] = initial_mv[REFP_1][2][MV_Y] - ((delta_y + search_offset_y[dir]) << 2);
-        refined_mv[REFP_1][3][MV_X] = initial_mv[REFP_1][3][MV_X] - ((delta_x + search_offset_x[dir]) << 2);
-        refined_mv[REFP_1][3][MV_Y] = initial_mv[REFP_1][3][MV_Y] - ((delta_y + search_offset_y[dir]) << 2);
+#if AFFINE_MEMORY_CONSTRAINT
+        for (int i = 0; i < REFP_NUM; i++)
+        {
+            for (int ver = 0; ver < cp_num; ver++)
+            {
+                refined_mv[i][ver][MV_X] = initial_mv[i][ver][MV_X] + ((delta_x + search_offset_x[dir]) << 2);
+                refined_mv[i][ver][MV_Y] = initial_mv[i][ver][MV_Y] + ((delta_y + search_offset_y[dir]) << 2);
+            }
+        }
         if (!AFFINE_DMVR_memory_access(mod_info_curr, cu_width, cu_height, refined_mv))
         {
             break;
@@ -7125,23 +7107,14 @@ void process_AFFINEDMVR(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)
         com_sub_pel_error_surface(sadbuffer, deltaMv);
 
 #if AFFINE_MEMORY_CONSTRAINT
-        refined_mv[REFP_0][0][MV_X] = initial_mv[REFP_0][0][MV_X] + (delta_mvx + (deltaMv[MV_X] >> 2));
-        refined_mv[REFP_0][0][MV_Y] = initial_mv[REFP_0][0][MV_Y] + (delta_mvy + (deltaMv[MV_Y] >> 2));
-        refined_mv[REFP_0][1][MV_X] = initial_mv[REFP_0][1][MV_X] + (delta_mvx + (deltaMv[MV_X] >> 2));
-        refined_mv[REFP_0][1][MV_Y] = initial_mv[REFP_0][1][MV_Y] + (delta_mvy + (deltaMv[MV_Y] >> 2));
-        refined_mv[REFP_0][2][MV_X] = initial_mv[REFP_0][2][MV_X] + (delta_mvx + (deltaMv[MV_X] >> 2));
-        refined_mv[REFP_0][2][MV_Y] = initial_mv[REFP_0][2][MV_Y] + (delta_mvy + (deltaMv[MV_Y] >> 2));
-        refined_mv[REFP_0][3][MV_X] = initial_mv[REFP_0][3][MV_X] + (delta_mvx + (deltaMv[MV_X] >> 2));
-        refined_mv[REFP_0][3][MV_Y] = initial_mv[REFP_0][3][MV_Y] + (delta_mvy + (deltaMv[MV_Y] >> 2));
-
-        refined_mv[REFP_1][0][MV_X] = initial_mv[REFP_1][0][MV_X] - (delta_mvx + (deltaMv[MV_X] >> 2));
-        refined_mv[REFP_1][0][MV_Y] = initial_mv[REFP_1][0][MV_Y] - (delta_mvy + (deltaMv[MV_Y] >> 2));
-        refined_mv[REFP_1][1][MV_X] = initial_mv[REFP_1][1][MV_X] - (delta_mvx + (deltaMv[MV_X] >> 2));
-        refined_mv[REFP_1][1][MV_Y] = initial_mv[REFP_1][1][MV_Y] - (delta_mvy + (deltaMv[MV_Y] >> 2));
-        refined_mv[REFP_1][2][MV_X] = initial_mv[REFP_1][2][MV_X] - (delta_mvx + (deltaMv[MV_X] >> 2));
-        refined_mv[REFP_1][2][MV_Y] = initial_mv[REFP_1][2][MV_Y] - (delta_mvy + (deltaMv[MV_Y] >> 2));
-        refined_mv[REFP_1][3][MV_X] = initial_mv[REFP_1][3][MV_X] - (delta_mvx + (deltaMv[MV_X] >> 2));
-        refined_mv[REFP_1][3][MV_Y] = initial_mv[REFP_1][3][MV_Y] - (delta_mvy + (deltaMv[MV_Y] >> 2));
+        for (int i = 0; i < REFP_NUM; i++)
+        {
+            for (int ver = 0; ver < cp_num; ver++)
+            {
+                refined_mv[i][ver][MV_X] = initial_mv[i][ver][MV_X] + (delta_mvx + (deltaMv[MV_X] >> 2));
+                refined_mv[i][ver][MV_Y] = initial_mv[i][ver][MV_Y] + (delta_mvy + (deltaMv[MV_Y] >> 2));
+            }
+        }
         if (AFFINE_DMVR_memory_access(mod_info_curr, cu_width, cu_height, refined_mv))
         {
             delta_mvx += deltaMv[MV_X] >> 2;
@@ -7154,27 +7127,515 @@ void process_AFFINEDMVR(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)
 #endif
     }
 
-    mv[REFP_0][0][MV_X] = initial_mv[REFP_0][0][MV_X] + delta_mvx;
-    mv[REFP_0][0][MV_Y] = initial_mv[REFP_0][0][MV_Y] + delta_mvy;
-    mv[REFP_0][1][MV_X] = initial_mv[REFP_0][1][MV_X] + delta_mvx;
-    mv[REFP_0][1][MV_Y] = initial_mv[REFP_0][1][MV_Y] + delta_mvy;
-    mv[REFP_0][2][MV_X] = initial_mv[REFP_0][2][MV_X] + delta_mvx;
-    mv[REFP_0][2][MV_Y] = initial_mv[REFP_0][2][MV_Y] + delta_mvy;
-    mv[REFP_0][3][MV_X] = initial_mv[REFP_0][3][MV_X] + delta_mvx;
-    mv[REFP_0][3][MV_Y] = initial_mv[REFP_0][3][MV_Y] + delta_mvy;
-
-    mv[REFP_1][0][MV_X] = initial_mv[REFP_1][0][MV_X] - delta_mvx;
-    mv[REFP_1][0][MV_Y] = initial_mv[REFP_1][0][MV_Y] - delta_mvy;
-    mv[REFP_1][1][MV_X] = initial_mv[REFP_1][1][MV_X] - delta_mvx;
-    mv[REFP_1][1][MV_Y] = initial_mv[REFP_1][1][MV_Y] - delta_mvy;
-    mv[REFP_1][2][MV_X] = initial_mv[REFP_1][2][MV_X] - delta_mvx;
-    mv[REFP_1][2][MV_Y] = initial_mv[REFP_1][2][MV_Y] - delta_mvy;
-    mv[REFP_1][3][MV_X] = initial_mv[REFP_1][3][MV_X] - delta_mvx;
-    mv[REFP_1][3][MV_Y] = initial_mv[REFP_1][3][MV_Y] - delta_mvy;
+    for (int i = 0; i < REFP_NUM; i++)
+    {
+        for (int ver = 0; ver < cp_num; ver++)
+        {
+            mv[i][ver][MV_X] = initial_mv[i][ver][MV_X] + delta_mvx;
+            mv[i][ver][MV_Y] = initial_mv[i][ver][MV_Y] + delta_mvy;
+        }
+    }
      
 }
 #endif
 
+#if AFFINE_PARA
+void refine_cpmv(COM_MODE* mod_info_curr, int cp_num, int a[2], int b[2], int c[2], int d[2], int w, int h, CPMV(*cp_mv)[VER_NUM][MV_D], int num, int i)
+{
+    int cu_width = mod_info_curr->cu_width;
+    int cu_height = mod_info_curr->cu_height;
+    if (cp_num == 3)
+    {
+        if (num == 0)
+        {
+            cp_mv[i][1][MV_X] = (s32)(a[i] >> (7 - com_tbl_log2[cu_width])) + cp_mv[i][0][MV_X];
+            cp_mv[i][1][MV_Y] = (s32)(b[i] >> (7 - com_tbl_log2[cu_width])) + cp_mv[i][0][MV_Y];
+            cp_mv[i][2][MV_X] = (s32)(c[i] >> (7 - com_tbl_log2[cu_height])) + cp_mv[i][0][MV_X];
+            cp_mv[i][2][MV_Y] = (s32)(d[i] >> (7 - com_tbl_log2[cu_height])) + cp_mv[i][0][MV_Y];
+        }
+        else if (num == 1)
+        {
+            cp_mv[i][0][MV_X] = -(s32)(a[i] >> (7 - com_tbl_log2[cu_width])) + cp_mv[i][1][MV_X];
+            cp_mv[i][0][MV_Y] = -(s32)(b[i] >> (7 - com_tbl_log2[cu_width])) + cp_mv[i][1][MV_Y];
+            cp_mv[i][2][MV_X] = (s32)(c[i] >> (7 - com_tbl_log2[cu_height])) + cp_mv[i][0][MV_X];
+            cp_mv[i][2][MV_Y] = (s32)(d[i] >> (7 - com_tbl_log2[cu_height])) + cp_mv[i][0][MV_Y];
+        }
+        else
+        {
+            cp_mv[i][0][MV_X] = -(s32)(c[i] >> (7 - com_tbl_log2[cu_height])) + cp_mv[i][2][MV_X];
+            cp_mv[i][0][MV_Y] = -(s32)(d[i] >> (7 - com_tbl_log2[cu_height])) + cp_mv[i][2][MV_Y];
+            cp_mv[i][1][MV_X] = (s32)(a[i] >> (7 - com_tbl_log2[cu_width])) + cp_mv[i][0][MV_X];
+            cp_mv[i][1][MV_Y] = (s32)(b[i] >> (7 - com_tbl_log2[cu_width])) + cp_mv[i][0][MV_Y];
+        }
+    }
+    else
+    {
+        if (num == 0)
+        {
+            cp_mv[i][1][MV_X] = (s32)(a[i] >> (7 - com_tbl_log2[cu_width])) + cp_mv[i][0][MV_X];
+            cp_mv[i][1][MV_Y] = (s32)(b[i] >> (7 - com_tbl_log2[cu_width])) + cp_mv[i][0][MV_Y];
+        }
+        else
+        {
+            cp_mv[i][0][MV_X] = -(s32)(a[i] >> (7 - com_tbl_log2[cu_width])) + cp_mv[i][1][MV_X];
+            cp_mv[i][0][MV_Y] = -(s32)(b[i] >> (7 - com_tbl_log2[cu_width])) + cp_mv[i][1][MV_Y];
+        }
+    }
+}
+void com_affine_para_mc_lc(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)[REFP_NUM], pel(*affine_dmvr_y)[MAX_CU_DIM], CPMV cp_mv[REFP_NUM][VER_NUM][MV_D], int sub_w, int sub_h, int i, int bit_depth, int dmv_hor_x, int dmv_hor_y, int dmv_ver_x, int dmv_ver_y, int num)
+{
+    s8* refi = mod_info_curr->refi;
+    int pic_w = info->pic_width;
+    int pic_h = info->pic_height;
+    int x = mod_info_curr->x_pos;
+    int y = mod_info_curr->y_pos;
+    int cu_width = mod_info_curr->cu_width;
+    int cu_height = mod_info_curr->cu_height;
+    COM_PIC* ref_pic;
+    int half_w, half_h;
+    s32 hor_max, hor_min, ver_max, ver_min;
+    s32 mv_scale_tmp_hor_ori, mv_scale_tmp_ver_ori;
+    s32 mv_scale_tmp_hor, mv_scale_tmp_ver;
+    int cp_num = mod_info_curr->affine_flag + 1;
+    s32 mv_save[MAX_CU_SIZE >> MIN_CU_LOG2][MAX_CU_SIZE >> MIN_CU_LOG2][MV_D];
+    int qpel_gmv_x, qpel_gmv_y;
+    pel* pred = affine_dmvr_y[i];
+    half_w = sub_w >> 1;
+    half_h = sub_h >> 1;
+    s32 mv_scale_hor, mv_scale_ver;
+    ref_pic = refp[refi[i]][i].pic;
+    if (cp_num == 3)
+    {
+        if (num == 0)
+        {
+            mv_scale_hor = (s32)cp_mv[i][0][MV_X] << 7;
+            mv_scale_ver = (s32)cp_mv[i][0][MV_Y] << 7;
+        }
+        else if (num == 1)
+        {
+            mv_scale_hor = (s32)cp_mv[i][1][MV_X] << 7;
+            mv_scale_ver = (s32)cp_mv[i][1][MV_Y] << 7;
+        }
+        else
+        {
+            mv_scale_hor = (s32)cp_mv[i][2][MV_X] << 7;
+            mv_scale_ver = (s32)cp_mv[i][2][MV_Y] << 7;
+        }
+    }
+    else
+    {
+        if (num == 0)
+        {
+            mv_scale_hor = (s32)cp_mv[i][0][MV_X] << 7;
+            mv_scale_ver = (s32)cp_mv[i][0][MV_Y] << 7;
+        }
+        else
+        {
+            mv_scale_hor = (s32)cp_mv[i][1][MV_X] << 7;
+            mv_scale_ver = (s32)cp_mv[i][1][MV_Y] << 7;
+        }
+    }
+    for (int h = 0; h < cu_height; h = h + sub_h)
+    {
+        for (int w = 0; w < cu_width; w = w + sub_w)
+        {
+#if CTU_256
+            hor_max = (pic_w + MAX_CU_SIZE2 + 4 - x - cu_width + 1) << 4;
+            ver_max = (pic_h + MAX_CU_SIZE2 + 4 - y - cu_height + 1) << 4;
+            hor_min = (-MAX_CU_SIZE2 - 4 - x) << 4;
+            ver_min = (-MAX_CU_SIZE2 - 4 - y) << 4;
+#endif
+            int pos_x = w + half_w;
+            int pos_y = h + half_h;
+
+
+            if (w == 0 && h == 0)
+            {
+                pos_x = 0;
+                pos_y = 0;
+            }
+            else if (w + sub_w == cu_width && h == 0)
+            {
+                pos_x = cu_width;
+                pos_y = 0;
+            }
+            else if (w == 0 && h + sub_h == cu_height && cp_num == 3)
+            {
+                pos_x = 0;
+                pos_y = cu_height;
+            }
+
+            if (num == 0)
+            {
+                mv_scale_tmp_hor = mv_scale_hor + dmv_hor_x * pos_x + dmv_ver_x * pos_y;
+                mv_scale_tmp_ver = mv_scale_ver + dmv_hor_y * pos_x + dmv_ver_y * pos_y;
+            }
+            else if (num == 1)
+            {
+                mv_scale_tmp_hor = mv_scale_hor + dmv_hor_x * pos_x - (dmv_hor_x << com_tbl_log2[cu_width]) + dmv_ver_x * pos_y;
+                mv_scale_tmp_ver = mv_scale_ver + dmv_hor_y * pos_x - (dmv_hor_y << com_tbl_log2[cu_width]) + dmv_ver_y * pos_y;
+            }
+            else
+            {
+                mv_scale_tmp_hor = mv_scale_hor + dmv_hor_x * pos_x - (dmv_ver_x << com_tbl_log2[cu_height]) + dmv_ver_x * pos_y;
+                mv_scale_tmp_ver = mv_scale_ver + dmv_hor_y * pos_x - (dmv_ver_y << com_tbl_log2[cu_height]) + dmv_ver_y * pos_y;
+            }
+
+
+            // 1/16 precision, 18 bits, for MC
+#if BD_AFFINE_AMVR
+            com_mv_rounding_s32(mv_scale_tmp_hor, mv_scale_tmp_ver, &mv_scale_tmp_hor, &mv_scale_tmp_ver, 7, 0);
+#else
+            com_mv_rounding_s32(mv_scale_tmp_hor, mv_scale_tmp_ver, &mv_scale_tmp_hor, &mv_scale_tmp_ver, 5, 0);
+#endif
+            mv_scale_tmp_hor = COM_CLIP3(COM_INT18_MIN, COM_INT18_MAX, mv_scale_tmp_hor);
+            mv_scale_tmp_ver = COM_CLIP3(COM_INT18_MIN, COM_INT18_MAX, mv_scale_tmp_ver);
+            // save MVF for chroma interpolation
+            int w_scu = PEL2SCU(w);
+            int h_scu = PEL2SCU(h);
+            mv_save[w_scu][h_scu][MV_X] = mv_scale_tmp_hor;
+            mv_save[w_scu][h_scu][MV_Y] = mv_scale_tmp_ver;
+
+
+            mv_save[w_scu + 1][h_scu][MV_X] = mv_scale_tmp_hor;
+            mv_save[w_scu + 1][h_scu][MV_Y] = mv_scale_tmp_ver;
+            mv_save[w_scu][h_scu + 1][MV_X] = mv_scale_tmp_hor;
+            mv_save[w_scu][h_scu + 1][MV_Y] = mv_scale_tmp_ver;
+            mv_save[w_scu + 1][h_scu + 1][MV_X] = mv_scale_tmp_hor;
+            mv_save[w_scu + 1][h_scu + 1][MV_Y] = mv_scale_tmp_ver;
+
+            // clip
+            mv_scale_tmp_hor_ori = mv_scale_tmp_hor;
+            mv_scale_tmp_ver_ori = mv_scale_tmp_ver;
+            mv_scale_tmp_hor = min(hor_max, max(hor_min, mv_scale_tmp_hor));
+            mv_scale_tmp_ver = min(ver_max, max(ver_min, mv_scale_tmp_ver));
+            qpel_gmv_x = ((x + w) << 4) + mv_scale_tmp_hor;
+            qpel_gmv_y = ((y + h) << 4) + mv_scale_tmp_ver;
+
+            com_mc_l_hp(mv_scale_tmp_hor_ori, mv_scale_tmp_ver_ori, ref_pic->y, qpel_gmv_x, qpel_gmv_y, ref_pic->stride_luma, cu_width, (pred + w), sub_w, sub_h, bit_depth);
+        }
+        pred += (cu_width * sub_h);
+    }
+}
+void get_initial_affine_para(COM_MODE* mod_info_curr, CPMV cp_mv[REFP_NUM][VER_NUM][MV_D], int* dmv_hor_x, int* dmv_hor_y, int* dmv_ver_x, int* dmv_ver_y)
+{
+    int cu_width = mod_info_curr->cu_width;
+    int cu_height = mod_info_curr->cu_height;
+    int cp_num = mod_info_curr->affine_flag + 1;
+    for (int i = 0; i < REFP_NUM; i++)
+    {
+        dmv_hor_x[i] = (((s32)cp_mv[i][1][MV_X] - (s32)cp_mv[i][0][MV_X]) << 7) >> com_tbl_log2[cu_width];      // deltaMvHor
+        dmv_hor_y[i] = (((s32)cp_mv[i][1][MV_Y] - (s32)cp_mv[i][0][MV_Y]) << 7) >> com_tbl_log2[cu_width];
+        if (cp_num == 3)
+        {
+            dmv_ver_x[i] = (((s32)cp_mv[i][2][MV_X] - (s32)cp_mv[i][0][MV_X]) << 7) >> com_tbl_log2[cu_height]; // deltaMvVer
+            dmv_ver_y[i] = (((s32)cp_mv[i][2][MV_Y] - (s32)cp_mv[i][0][MV_Y]) << 7) >> com_tbl_log2[cu_height];
+        }
+        else
+        {
+            dmv_ver_x[i] = -dmv_hor_y[i];                                                                    // deltaMvVer
+            dmv_ver_y[i] = dmv_hor_x[i];
+        }
+    }
+}
+void process_AFFINEPARA(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)[REFP_NUM], int bit_depth, int sub_w, int sub_h, CPMV(*mv)[VER_NUM][MV_D])
+{
+    int x = mod_info_curr->x_pos;
+    int y = mod_info_curr->y_pos;
+    int cu_width = mod_info_curr->cu_width;
+    int cu_height = mod_info_curr->cu_height;
+    int cp_num = mod_info_curr->affine_flag + 1;
+    pel affine_dmvr_y[REFP_NUM][MAX_CU_DIM];
+    CPMV cp_mv[REFP_NUM][VER_NUM][MV_D] = {
+    {
+        {mv[REFP_0][0][MV_X],mv[REFP_0][0][MV_Y]},
+        {mv[REFP_0][1][MV_X],mv[REFP_0][1][MV_Y]},
+        {mv[REFP_0][2][MV_X],mv[REFP_0][2][MV_Y]},
+        {mv[REFP_0][3][MV_X],mv[REFP_0][3][MV_Y]}
+    },
+    {
+        {mv[REFP_1][0][MV_X],mv[REFP_1][0][MV_Y]},
+        {mv[REFP_1][1][MV_X],mv[REFP_1][1][MV_Y]},
+        {mv[REFP_1][2][MV_X],mv[REFP_1][2][MV_Y]},
+        {mv[REFP_1][3][MV_X],mv[REFP_1][3][MV_Y]}
+    }
+    };
+
+    CPMV refined_mv[REFP_NUM][VER_NUM][MV_D];
+    int cost = INT_MAX;
+    int min_cost = INT_MAX;
+    SAD_POINT_INDEX idx;
+
+    int cp3_search_offset_a[9] = { 0, -1, 0, 0, 0, 1, 0, 0, 0 };
+    int cp3_search_offset_b[9] = { 0, 0, -1, 0, 0, 0, 1, 0, 0 };
+    int cp3_search_offset_c[9] = { 0, 0, 0, -1, 0, 0, 0, 1, 0 };
+    int cp3_search_offset_d[9] = { 0, 0, 0, 0, -1, 0, 0, 0, 1 };
+
+    int cp2_search_offset_a[9] = { 0, -1, -1, -1, 0, 1, 1, 1, 0 };
+    int cp2_search_offset_b[9] = { 0, -1, 0, 1, 1, 1, 0, -1, -1 };
+
+    int step = 1 << 8 >> com_tbl_log2[sub_w];
+    s32 cost_temp[3][3] = { { INT_MAX, INT_MAX, INT_MAX},
+    { INT_MAX, INT_MAX, INT_MAX},
+    { INT_MAX, INT_MAX, INT_MAX} };
+    int dir = 0;
+    int last_dir = 0;
+    int affine_para_iter_count = 0;
+    int a_initial[2], b_initial[2], c_initial[2], d_initial[2];
+    get_initial_affine_para(mod_info_curr, cp_mv, a_initial, b_initial, c_initial, d_initial);
+    int a[2], b[2], c[2], d[2];
+    int delta_a = 0, delta_b = 0, delta_c = 0, delta_d = 0;
+    for (int num = 0; num < cp_num; num++)
+    {
+        cost_temp[0][0] = min_cost;
+        affine_para_iter_count = 0;
+        delta_a = 0;
+        delta_b = 0;
+        delta_c = 0;
+        delta_d = 0;
+        last_dir = 0;
+        while (1)
+        {
+            dir = 0;
+            if (cp_num == 2)
+            {
+                switch (last_dir)
+                {
+                case 1:
+                    cost_temp[1][1] = cost_temp[0][1];
+                    cost_temp[1][2] = cost_temp[0][0];
+                    cost_temp[0][0] = cost_temp[last_dir / 3][last_dir % 3];
+                    cost_temp[2][0] = cost_temp[2][2];
+                    break;
+                case 2:
+                    cost_temp[1][2] = cost_temp[1][1];
+                    cost_temp[1][1] = cost_temp[1][0];
+                    cost_temp[2][0] = cost_temp[0][0];
+                    cost_temp[0][0] = cost_temp[last_dir / 3][last_dir % 3];
+                    cost_temp[2][1] = cost_temp[2][2];
+                    cost_temp[2][2] = cost_temp[0][1];
+                    break;
+                case 3:
+                    cost_temp[0][0] = cost_temp[last_dir / 3][last_dir % 3];
+                    cost_temp[2][1] = cost_temp[2][0];
+                    cost_temp[2][0] = cost_temp[1][1];
+                    cost_temp[2][2] = cost_temp[0][2];
+                    break;
+                case 4:
+                    cost_temp[1][0] = cost_temp[0][2];
+                    cost_temp[0][2] = cost_temp[0][1];
+                    cost_temp[2][1] = cost_temp[2][0];
+                    cost_temp[2][0] = cost_temp[1][2];
+                    cost_temp[2][2] = cost_temp[0][0];
+                    cost_temp[0][0] = cost_temp[last_dir / 3][last_dir % 3];
+                    break;
+                case 5:
+                    cost_temp[0][1] = cost_temp[0][0];
+                    cost_temp[0][0] = cost_temp[last_dir / 3][last_dir % 3];
+                    cost_temp[0][2] = cost_temp[1][1];
+                    cost_temp[2][2] = cost_temp[2][0];
+                    break;
+                case 6:
+                    cost_temp[0][1] = cost_temp[2][2];
+                    cost_temp[2][2] = cost_temp[1][0];
+                    cost_temp[0][2] = cost_temp[0][0];
+                    cost_temp[0][0] = cost_temp[last_dir / 3][last_dir % 3];
+                    cost_temp[1][0] = cost_temp[1][1];
+                    cost_temp[1][1] = cost_temp[1][0];
+                    break;
+                case 7:
+                    cost_temp[1][0] = cost_temp[0][0];
+                    cost_temp[0][0] = cost_temp[last_dir / 3][last_dir % 3];
+                    cost_temp[0][2] = cost_temp[2][2];
+                    cost_temp[1][1] = cost_temp[2][0];
+                    break;
+                case 8:
+                    cost_temp[1][0] = cost_temp[0][2];
+                    cost_temp[0][2] = cost_temp[0][1];
+                    cost_temp[1][1] = cost_temp[0][0];
+                    cost_temp[0][0] = cost_temp[last_dir / 3][last_dir % 3];
+                    cost_temp[1][2] = cost_temp[2][0];
+                    cost_temp[2][0] = cost_temp[2][1];
+                    break;
+                default:
+                    // 如果last_dir不等于1, 2, 3, 4时不做任何事情
+                    break;
+                }
+            }
+            for (idx = 0; idx < 9; idx++)
+            {
+                if (last_dir != 0)
+                {
+                    if (idx == 0)
+                        continue;  // 跳过idx == 0的情况，避免不必要的计算
+                    if (cp_num == 2)
+                    {
+                        switch (last_dir)
+                        {
+                        case 1:
+                            if (idx >= 4 && idx <= 6)
+                                continue;
+                            break;
+                        case 2:
+                            if (idx >= 4 && idx <= 8)
+                                continue;
+                            break;
+                        case 3:
+                            if (idx >= 6 && idx <= 8)
+                                continue;
+                            break;
+                        case 4:
+                            if (idx == 1 || idx == 2 || idx >= 6 && idx <= 8)
+                                continue;
+                            break;
+                        case 5:
+                            if (idx == 1 || idx == 2 || idx == 8)
+                                continue;
+                            break;
+                        case 6:
+                            if (idx >= 1 && idx <= 4 || idx == 8)
+                                continue;
+                            break;
+                        case 7:
+                            if (idx >= 2 && idx <= 4)
+                                continue;
+                            break;
+                        case 8:
+                            if (idx >= 2 && idx <= 6)
+                                continue;
+                            break;
+                        default:
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    if (idx == 0 && num > 0)
+                    {
+                        continue;
+                    }
+                }
+                if (cp_num == 3)
+                {
+                    a[0] = a_initial[0] + (cp3_search_offset_a[idx] + delta_a) * step;
+                    b[0] = b_initial[0] + (cp3_search_offset_b[idx] + delta_b) * step;
+                    c[0] = c_initial[0] + (cp3_search_offset_c[idx] + delta_c) * step;
+                    d[0] = d_initial[0] + (cp3_search_offset_d[idx] + delta_d) * step;
+
+                    a[1] = a_initial[1] - (cp3_search_offset_a[idx] + delta_a) * step;
+                    b[1] = b_initial[1] - (cp3_search_offset_b[idx] + delta_b) * step;
+                    c[1] = c_initial[1] - (cp3_search_offset_c[idx] + delta_c) * step;
+                    d[1] = d_initial[1] - (cp3_search_offset_d[idx] + delta_d) * step;
+                }
+                else
+                {
+                    a[0] = a_initial[0] + (cp2_search_offset_a[idx] + delta_a) * step;
+                    b[0] = b_initial[0] + (cp2_search_offset_b[idx] + delta_b) * step;
+                    c[0] = - b[0];
+                    d[0] = a[0];
+
+                    a[1] = a_initial[1] - (cp2_search_offset_a[idx] + delta_a) * step;
+                    b[1] = b_initial[1] - (cp2_search_offset_b[idx] + delta_b) * step;
+                    c[1] = - b[1];
+                    d[1] = a[1];
+                }
+                for (int i = 0; i < REFP_NUM; i++)
+                {
+                    com_affine_para_mc_lc(info, mod_info_curr, refp, affine_dmvr_y, cp_mv, sub_w, sub_h, i, bit_depth, a[i], b[i], c[i], d[i], num);
+                }
+                cost = SAD_AFFINE_DMVR(cu_width, cu_height, affine_dmvr_y[0], affine_dmvr_y[1], bit_depth);
+                if (cost < min_cost)
+                {
+                    min_cost = cost;
+                    dir = idx;
+                }
+                cost_temp[idx / 3][idx % 3] = cost;
+            }
+            if (num == 0 && dir == 0)
+            {
+                return;
+            }
+            if (cp_num == 3)
+            {
+                delta_a += cp3_search_offset_a[dir];
+                delta_b += cp3_search_offset_b[dir];
+                delta_c += cp3_search_offset_c[dir];
+                delta_d += cp3_search_offset_d[dir];
+            }
+            else
+            {
+                delta_a += cp2_search_offset_a[dir];
+                delta_b += cp2_search_offset_b[dir];
+            }
+            if (delta_a != 0 || delta_b != 0 || delta_c != 0 || delta_d != 0)
+            {
+                delta_a = delta_a;
+            }
+            affine_para_iter_count++;
+            last_dir = dir;
+            if (min_cost == 0 || dir == 0 || affine_para_iter_count == AFFINE_PARA_ITER_COUNT)
+            {
+                break;
+            }
+            if (cp_num == 3)
+            {
+                cost_temp[0][0] = cost_temp[dir / 3][dir % 3];
+            }
+        }
+        for (int i = 0; i < REFP_NUM; i++)
+        {
+            if (i == 0)
+            {
+                if (cp_num == 3)
+                {
+                    a_initial[i] += delta_a * step;
+                    b_initial[i] += delta_b * step;
+                    c_initial[i] += delta_c * step;
+                    d_initial[i] += delta_d * step;
+                }
+                else
+                {
+                    a_initial[i] += delta_a * step;
+                    b_initial[i] += delta_b * step;
+                    c_initial[i] = -b_initial[i];
+                    d_initial[i] = a_initial[i];
+                }
+            }
+            else
+            {
+                if (cp_num == 3)
+                {
+                    a_initial[i] -= delta_a * step;
+                    b_initial[i] -= delta_b * step;
+                    c_initial[i] -= delta_c * step;
+                    d_initial[i] -= delta_d * step;
+                }
+                else
+                {
+                    a_initial[i] -= delta_a * step;
+                    b_initial[i] -= delta_b * step;
+                    c_initial[i] = -b_initial[i];
+                    d_initial[i] = a_initial[i];
+                }
+            }
+            refine_cpmv(mod_info_curr, cp_num, a_initial, b_initial, c_initial, d_initial, cu_width, cu_height, cp_mv, num, i);
+        }
+    }
+    if (!AFFINE_DMVR_memory_access(mod_info_curr, cu_width, cu_height, cp_mv))
+    {
+        return;
+    }
+    for (int i = 0; i < REFP_NUM; i++)
+    {
+        for (int ver = 0; ver < cp_num; ver++)
+        {
+            mv[i][ver][MV_X] = cp_mv[i][ver][MV_X]; 
+            mv[i][ver][MV_Y] = cp_mv[i][ver][MV_Y];
+        }
+    }
+}
+#endif
 void com_mc(int x, int y, int w, int h, int pred_stride, pel pred_buf[N_C][MAX_CU_DIM], COM_INFO *info, COM_MODE *mod_info_curr, COM_REFP(*refp)[REFP_NUM], CHANNEL_TYPE channel, int bit_depth
 #if DMVR
     , COM_DMVR* dmvr
