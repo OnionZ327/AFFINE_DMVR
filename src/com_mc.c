@@ -7485,7 +7485,7 @@ void process_AFFINEPARA(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)
                                 continue;
                             break;
                         case 4:
-                            if (idx == 1 || idx == 2 || idx >= 6 && idx <= 8)
+                            if (idx == 1 || idx == 2 || (idx >= 6 && idx <= 8))
                                 continue;
                             break;
                         case 5:
@@ -7493,7 +7493,7 @@ void process_AFFINEPARA(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)
                                 continue;
                             break;
                         case 6:
-                            if (idx >= 1 && idx <= 4 || idx == 8)
+                            if ((idx >= 1 && idx <= 4) || idx == 8)
                                 continue;
                             break;
                         case 7:
