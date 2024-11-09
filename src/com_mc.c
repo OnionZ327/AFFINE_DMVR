@@ -7562,10 +7562,6 @@ void process_AFFINEPARA(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)
                 delta_a += cp2_search_offset_a[dir];
                 delta_b += cp2_search_offset_b[dir];
             }
-            if (delta_a != 0 || delta_b != 0 || delta_c != 0 || delta_d != 0)
-            {
-                delta_a = delta_a;
-            }
             affine_para_iter_count++;
             last_dir = dir;
             if (min_cost == 0 || dir == 0 || affine_para_iter_count == AFFINE_PARA_ITER_COUNT)
