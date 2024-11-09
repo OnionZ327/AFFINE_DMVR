@@ -6921,8 +6921,6 @@ void process_AFFINEDMVR(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)
     int cu_width = mod_info_curr->cu_width;
     int cu_height = mod_info_curr->cu_height;
     int cp_num = mod_info_curr->affine_flag + 1;
-    int dmv_hor_x, dmv_ver_x, dmv_hor_y, dmv_ver_y;
-    int qpel_gmv_x, qpel_gmv_y;
     COM_PIC* ref_pic;
     pel affine_dmvr_y[REFP_NUM][MAX_CU_DIM];
     CPMV cp_mv[REFP_NUM][VER_NUM][MV_D] = {
@@ -6972,13 +6970,7 @@ void process_AFFINEDMVR(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)
     int last_dir = 0;
     s32 center_x = 1;
     s32 center_y = 1;
-    int half_w, half_h;
-    s32 hor_max, hor_min, ver_max, ver_min;
-    s32 mv_scale_tmp_hor_ori, mv_scale_tmp_ver_ori;
-    s32 mv_scale_tmp_hor, mv_scale_tmp_ver;
-    BOOL search_flag = 1;
     int affine_dmvr_iter_count = 0;
-    s32 mv_save[MAX_CU_SIZE >> MIN_CU_LOG2][MAX_CU_SIZE >> MIN_CU_LOG2][MV_D];
     while (1)
     {
         dir = 0;
@@ -7055,7 +7047,6 @@ void process_AFFINEDMVR(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)
                 dir = idx;
             }
             cost_temp[center_y + search_offset_y[idx]][center_x + search_offset_x[idx]] = cost;
-            search_flag = 1;
         }
 
 #if AFFINE_MEMORY_CONSTRAINT
@@ -7130,7 +7121,7 @@ void process_AFFINEDMVR(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)
             mv[i][ver][MV_Y] = initial_mv[i][ver][MV_Y] + delta_mvy;
         }
     }
-     
+    min_cost = min_cost;
 }
 #endif
 
@@ -7611,19 +7602,23 @@ void process_AFFINEPARA(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)
             }
             refine_cpmv(mod_info_curr, cp_num, a_initial, b_initial, c_initial, d_initial, cu_width, cu_height, cp_mv, num, i);
         }
-    }
-    if (!AFFINE_DMVR_memory_access(mod_info_curr, cu_width, cu_height, cp_mv))
-    {
-        return;
-    }
-    for (int i = 0; i < REFP_NUM; i++)
-    {
-        for (int ver = 0; ver < cp_num; ver++)
+        if (!AFFINE_DMVR_memory_access(mod_info_curr, cu_width, cu_height, cp_mv))
         {
-            mv[i][ver][MV_X] = cp_mv[i][ver][MV_X]; 
-            mv[i][ver][MV_Y] = cp_mv[i][ver][MV_Y];
+            return;
+        }
+        else
+        {
+            for (int i = 0; i < REFP_NUM; i++)
+            {
+                for (int ver = 0; ver < cp_num; ver++)
+                {
+                    mv[i][ver][MV_X] = cp_mv[i][ver][MV_X];
+                    mv[i][ver][MV_Y] = cp_mv[i][ver][MV_Y];
+                }
+            }
         }
     }
+    min_cost = min_cost;
 }
 #endif
 void com_mc(int x, int y, int w, int h, int pred_stride, pel pred_buf[N_C][MAX_CU_DIM], COM_INFO *info, COM_MODE *mod_info_curr, COM_REFP(*refp)[REFP_NUM], CHANNEL_TYPE channel, int bit_depth
