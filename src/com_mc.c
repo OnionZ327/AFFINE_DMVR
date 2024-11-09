@@ -7001,7 +7001,6 @@ void process_AFFINEDMVR(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)
             cost_temp[1][1] = cost_temp[1][2];
             break;
         default:
-            // 如果last_dir不等于1, 2, 3, 4时不做任何事情
             break;
         }
 
@@ -7011,28 +7010,24 @@ void process_AFFINEDMVR(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)
             if (last_dir != 0)
             {
                 if (idx == 0)
-                    continue;  // 跳过idx == 0的情况，避免不必要的计算
+                    continue;
                 switch (last_dir)
                 {
                 case 1:
-                    // 如果idx == 2时，不进行搜索
                     if (idx == 2)
-                        continue;  // 跳过idx==2
+                        continue;
                     break;
                 case 2:
-                    // 如果idx == 1时，不进行搜索
                     if (idx == 1)
-                        continue;  // 跳过idx==1
+                        continue;
                     break;
                 case 3:
-                    // 如果idx == 4时，不进行搜索
                     if (idx == 4)
-                        continue;  // 跳过idx==4
+                        continue;
                     break;
                 case 4:
-                    // 如果idx == 3时，不进行搜索
                     if (idx == 3)
-                        continue;  // 跳过idx==3
+                        continue;
                     break;
                 default:
                     break;
@@ -7458,7 +7453,6 @@ void process_AFFINEPARA(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)
                     cost_temp[2][0] = cost_temp[2][1];
                     break;
                 default:
-                    // 如果last_dir不等于1, 2, 3, 4时不做任何事情
                     break;
                 }
             }
@@ -7467,7 +7461,7 @@ void process_AFFINEPARA(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)
                 if (last_dir != 0)
                 {
                     if (idx == 0)
-                        continue;  // 跳过idx == 0的情况，避免不必要的计算
+                        continue;
                     if (cp_num == 2)
                     {
                         switch (last_dir)

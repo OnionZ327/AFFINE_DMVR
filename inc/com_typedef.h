@@ -162,6 +162,7 @@ extern "C"
 //inter
 #define AFFINE_DMVR                        1
 #define AFFINE_PARA                        1
+#define DAMR                               AFFINE_DMVR || AFFINE_PARA
 #define DMVR                               1 // M4813: decoder-side motion vector refinement
 #define BIO                                1 // M4762: Bi-directional Optical Flow
 #define FIX_395                            1 // Fix issue 395

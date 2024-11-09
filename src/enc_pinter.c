@@ -5726,26 +5726,28 @@ static void analyze_affine_merge( ENC_CTX *ctx, ENC_CORE *core, double *cost_bes
         }
         mod_info_curr->refi[REFP_0] = mrg_list_refi[mrg_idx][REFP_0];
         mod_info_curr->refi[REFP_1] = mrg_list_refi[mrg_idx][REFP_1];
-#if AFFINE_DMVR
-        int affine_dmvr_poc_c = ctx->ptr;
+#if DAMR
+        int damr_poc_c = ctx->ptr;
         s8* refi = mod_info_curr->refi;
         int poc0 = ctx->refp[refi[REFP_0]][REFP_0].ptr;
         int poc1 = ctx->refp[refi[REFP_1]][REFP_1].ptr;
         int bit_depth = ctx->info.bit_depth_internal;
         CPMV(*mv)[VER_NUM][MV_D] = mod_info_curr->affine_mv;
-        BOOL affine_dmvr_poc_condition = ((BOOL)((affine_dmvr_poc_c - poc0) * (affine_dmvr_poc_c - poc1) < 0)) && (abs(affine_dmvr_poc_c - poc0) == abs(affine_dmvr_poc_c - poc1));//前后参考帧与当前帧时域上间隔一样
-        BOOL affine_dmvr_flag = 0;
+        BOOL damr_poc_condition = ((BOOL)((damr_poc_c - poc0) * (damr_poc_c - poc1) < 0)) && (abs(damr_poc_c - poc0) == abs(damr_poc_c - poc1));//前后参考帧与当前帧时域上间隔一样
+        BOOL damr_flag = 0;
         int sub_w;
         int sub_h;
-        if (affine_dmvr_poc_condition && REFI_IS_VALID(refi[REFP_0]) && REFI_IS_VALID(refi[REFP_1]))
+        if (damr_poc_condition && REFI_IS_VALID(refi[REFP_0]) && REFI_IS_VALID(refi[REFP_1]))
         {
-            affine_dmvr_flag = 1;
+            damr_flag = 1;
             sub_w = 8;
             sub_h = 8;
         }
-        if (affine_dmvr_flag)
+        if (damr_flag)
         {
+#if AFFINE_DMVR
             process_AFFINEDMVR(&ctx->info, mod_info_curr, ctx->refp, bit_depth, sub_w, sub_h, mv);
+#endif
 #if AFFINE_PARA
             process_AFFINEPARA(&ctx->info, mod_info_curr, ctx->refp, bit_depth, sub_w, sub_h, mv);
 #endif
@@ -6077,26 +6079,28 @@ static void analyze_affine_umve(ENC_CTX *ctx, ENC_CORE *core, double *cost_best)
     }
     mod_info_curr->refi[REFP_0] = mrg_list_refi[skip_idx_best][REFP_0];
     mod_info_curr->refi[REFP_1] = mrg_list_refi[skip_idx_best][REFP_1];
-#if AFFINE_DMVR
-    int affine_dmvr_poc_c = ctx->ptr;
+#if DAMR
+    int damr_poc_c = ctx->ptr;
     s8* refi = mod_info_curr->refi;
     int poc0 = ctx->refp[refi[REFP_0]][REFP_0].ptr;
     int poc1 = ctx->refp[refi[REFP_1]][REFP_1].ptr;
     int bit_depth = ctx->info.bit_depth_internal;
     CPMV(*mv)[VER_NUM][MV_D] = mod_info_curr->affine_mv;
-    BOOL affine_dmvr_poc_condition = ((BOOL)((affine_dmvr_poc_c - poc0) * (affine_dmvr_poc_c - poc1) < 0)) && (abs(affine_dmvr_poc_c - poc0) == abs(affine_dmvr_poc_c - poc1));//前后参考帧与当前帧时域上间隔一样
-    BOOL affine_dmvr_flag = 0;
+    BOOL damr_poc_condition = ((BOOL)((damr_poc_c - poc0) * (damr_poc_c - poc1) < 0)) && (abs(damr_poc_c - poc0) == abs(damr_poc_c - poc1));//前后参考帧与当前帧时域上间隔一样
+    BOOL damr_flag = 0;
     int sub_w;
     int sub_h;
-    if (affine_dmvr_poc_condition && REFI_IS_VALID(refi[REFP_0]) && REFI_IS_VALID(refi[REFP_1]))
+    if (damr_poc_condition && REFI_IS_VALID(refi[REFP_0]) && REFI_IS_VALID(refi[REFP_1]))
     {
-        affine_dmvr_flag = 1;
+        damr_flag = 1;
         sub_w = 8;
         sub_h = 8;
     }
-    if (affine_dmvr_flag)
+    if (damr_flag)
     {
+#if AFFINE_DMVR
         process_AFFINEDMVR(&ctx->info, mod_info_curr, ctx->refp, bit_depth, sub_w, sub_h, mv);
+#endif
 #if AFFINE_PARA
         process_AFFINEPARA(&ctx->info, mod_info_curr, ctx->refp, bit_depth, sub_w, sub_h, mv);
 #endif
