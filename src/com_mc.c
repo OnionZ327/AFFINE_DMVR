@@ -7030,8 +7030,16 @@ void process_AFFINEDMVR(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)
             {
                 for (int ver = 0; ver < cp_num; ver++)
                 {
-                    cp_mv[i][ver][MV_X] = initial_mv[i][ver][MV_X] + (-1) ^ i * ((search_offset_x[idx] + delta_x) << 2);
-                    cp_mv[i][ver][MV_Y] = initial_mv[i][ver][MV_Y] + (-1) ^ i * ((search_offset_y[idx] + delta_y) << 2);
+                    if (i == 0)
+                    {
+                        cp_mv[i][ver][MV_X] = initial_mv[i][ver][MV_X] + ((search_offset_x[idx] + delta_x) << 2);
+                        cp_mv[i][ver][MV_Y] = initial_mv[i][ver][MV_Y] + ((search_offset_y[idx] + delta_y) << 2);
+                    }
+                    else
+                    {
+                        cp_mv[i][ver][MV_X] = initial_mv[i][ver][MV_X] - ((search_offset_x[idx] + delta_x) << 2);
+                        cp_mv[i][ver][MV_Y] = initial_mv[i][ver][MV_Y] - ((search_offset_y[idx] + delta_y) << 2);
+                    }
                 }
             }
 
@@ -7054,8 +7062,16 @@ void process_AFFINEDMVR(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)
         {
             for (int ver = 0; ver < cp_num; ver++)
             {
-                refined_mv[i][ver][MV_X] = initial_mv[i][ver][MV_X] + (-1) ^ i * ((delta_x + search_offset_x[dir]) << 2);
-                refined_mv[i][ver][MV_Y] = initial_mv[i][ver][MV_Y] + (-1) ^ i * ((delta_y + search_offset_y[dir]) << 2);
+                if (i == 0)
+                {
+                    refined_mv[i][ver][MV_X] = initial_mv[i][ver][MV_X] + ((delta_x + search_offset_x[dir]) << 2);
+                    refined_mv[i][ver][MV_Y] = initial_mv[i][ver][MV_Y] + ((delta_y + search_offset_y[dir]) << 2);
+                }
+                else
+                {
+                    refined_mv[i][ver][MV_X] = initial_mv[i][ver][MV_X] - ((delta_x + search_offset_x[dir]) << 2);
+                    refined_mv[i][ver][MV_Y] = initial_mv[i][ver][MV_Y] - ((delta_y + search_offset_y[dir]) << 2);
+                }
             }
         }
         if (!AFFINE_DMVR_memory_access(mod_info_curr, cu_width, cu_height, refined_mv))
@@ -7097,8 +7113,16 @@ void process_AFFINEDMVR(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)
         {
             for (int ver = 0; ver < cp_num; ver++)
             {
-                refined_mv[i][ver][MV_X] = initial_mv[i][ver][MV_X] + (-1) ^ i * (delta_mvx + (deltaMv[MV_X] >> 2));
-                refined_mv[i][ver][MV_Y] = initial_mv[i][ver][MV_Y] + (-1) ^ i * (delta_mvy + (deltaMv[MV_Y] >> 2));
+                if (i == 0)
+                {
+                    refined_mv[i][ver][MV_X] = initial_mv[i][ver][MV_X] + (delta_mvx + (deltaMv[MV_X] >> 2));
+                    refined_mv[i][ver][MV_Y] = initial_mv[i][ver][MV_Y] + (delta_mvy + (deltaMv[MV_Y] >> 2));
+                }
+                else
+                {
+                    refined_mv[i][ver][MV_X] = initial_mv[i][ver][MV_X] - (delta_mvx + (deltaMv[MV_X] >> 2));
+                    refined_mv[i][ver][MV_Y] = initial_mv[i][ver][MV_Y] - (delta_mvy + (deltaMv[MV_Y] >> 2));
+                }
             }
         }
         if (AFFINE_DMVR_memory_access(mod_info_curr, cu_width, cu_height, refined_mv))
@@ -7117,8 +7141,16 @@ void process_AFFINEDMVR(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)
     {
         for (int ver = 0; ver < cp_num; ver++)
         {
-            mv[i][ver][MV_X] = initial_mv[i][ver][MV_X] + (-1) ^ i * delta_mvx;
-            mv[i][ver][MV_Y] = initial_mv[i][ver][MV_Y] + (-1) ^ i * delta_mvy;
+            if (i == 0)
+            {
+                mv[i][ver][MV_X] = initial_mv[i][ver][MV_X] + delta_mvx;
+                mv[i][ver][MV_Y] = initial_mv[i][ver][MV_Y] + delta_mvy;
+            }
+            else
+            {
+                mv[i][ver][MV_X] = initial_mv[i][ver][MV_X] - delta_mvx;
+                mv[i][ver][MV_Y] = initial_mv[i][ver][MV_Y] - delta_mvy;
+            }
         }
     }
     min_cost = min_cost;
