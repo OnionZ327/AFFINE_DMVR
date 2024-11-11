@@ -6777,6 +6777,61 @@ void process_DMVR( int x, int y, int pic_w, int pic_h, int w, int h, s8 refi[REF
 }
 #endif
 
+#if DAMR
+s32 com_DAMR_cost(int w, int h, pel* src1, pel* src2, int bit_depth)
+{
+    int sad;
+    s16* s1;
+    s16* s2;
+    __m128i s00, s01, sac0, sac1;
+    int i, j;
+    s1 = (s16*)src1;
+    s2 = (s16*)src2;
+    sac0 = _mm_setzero_si128();
+    sac1 = _mm_setzero_si128();
+
+    if (w & 0x07)
+    {
+        for (i = 0; i < (h >> 2); i++)
+        {
+            for (j = 0; j < w; j += 4)
+            {
+                SSE_SAD_16B_4PEL(s1 + j, s2 + j, s00, s01, sac0);
+                SSE_SAD_16B_4PEL(s1 + j + w, s2 + j + w, s00, s01, sac0);
+                SSE_SAD_16B_4PEL(s1 + j + w * 2, s2 + j + w * 2, s00, s01, sac0);
+                SSE_SAD_16B_4PEL(s1 + j + w * 3, s2 + j + w * 3, s00, s01, sac0);
+            }
+            s1 += w << 2;
+            s2 += w << 2;
+        }
+        sad = _mm_extract_epi32(sac0, 0);
+        sad += _mm_extract_epi32(sac0, 1);
+        sad += _mm_extract_epi32(sac0, 2);
+        sad += _mm_extract_epi32(sac0, 3);
+    }
+    else
+    {
+        for (i = 0; i < (h >> 2); i++)
+        {
+            for (j = 0; j < w; j += 8)
+            {
+                SSE_SAD_16B_8PEL(s1 + j, s2 + j, s00, s01, sac0);
+                SSE_SAD_16B_8PEL(s1 + j + w, s2 + j + w, s00, s01, sac0);
+                SSE_SAD_16B_8PEL(s1 + j + w * 2, s2 + j + w * 2, s00, s01, sac0);
+                SSE_SAD_16B_8PEL(s1 + j + w * 3, s2 + j + w * 3, s00, s01, sac0);
+            }
+            s1 += w << 2;
+            s2 += w << 2;
+        }
+        sad = _mm_extract_epi32(sac0, 0);
+        sad += _mm_extract_epi32(sac0, 1);
+        sad += _mm_extract_epi32(sac0, 2);
+        sad += _mm_extract_epi32(sac0, 3);
+    }
+
+    return (sad >> (bit_depth - 8));;
+}
+#endif
 #if AFFINE_DMVR
 void com_affine_dmvr_mc_lc(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)[REFP_NUM], pel(*affine_dmvr_y)[MAX_CU_DIM], CPMV cp_mv[REFP_NUM][VER_NUM][MV_D], int sub_w, int sub_h, int i, int bit_depth)
 {
@@ -7048,7 +7103,8 @@ void process_AFFINEDMVR(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)
                 com_affine_dmvr_mc_lc(info, mod_info_curr, refp, affine_dmvr_y, cp_mv, sub_w, sub_h, i, bit_depth);
             }
 
-            cost = SAD_AFFINE_DMVR(cu_width, cu_height, affine_dmvr_y[0], affine_dmvr_y[1], bit_depth);
+            //cost = SAD_AFFINE_DMVR(cu_width, cu_height, affine_dmvr_y[0], affine_dmvr_y[1], bit_depth);
+            cost = com_DAMR_cost(cu_width, cu_height, affine_dmvr_y[0], affine_dmvr_y[1], bit_depth);
             if (cost < min_cost)
             {
                 min_cost = cost;
@@ -7555,7 +7611,8 @@ void process_AFFINEPARA(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)
                 {
                     com_affine_para_mc_lc(info, mod_info_curr, refp, affine_dmvr_y, cp_mv, sub_w, sub_h, i, bit_depth, a[i], b[i], c[i], d[i], num);
                 }
-                cost = SAD_AFFINE_DMVR(cu_width, cu_height, affine_dmvr_y[0], affine_dmvr_y[1], bit_depth);
+                //cost = SAD_AFFINE_DMVR(cu_width, cu_height, affine_dmvr_y[0], affine_dmvr_y[1], bit_depth);
+                cost = com_DAMR_cost(cu_width, cu_height, affine_dmvr_y[0], affine_dmvr_y[1], bit_depth);
                 if (cost < min_cost)
                 {
                     min_cost = cost;
