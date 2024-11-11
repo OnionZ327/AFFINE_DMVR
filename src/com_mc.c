@@ -7659,7 +7659,7 @@ void process_AFFINEPARA(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)
                     refined_mv[i][ver][MV_X] = cp_mv[i][ver][MV_X];
                     refined_mv[i][ver][MV_Y] = cp_mv[i][ver][MV_Y];
                 }
-                refine_cpmv(mod_info_curr, cp_num, a_initial, b_initial, c_initial, d_initial, cu_width, cu_height, refined_mv, num, i);
+                refine_cpmv(mod_info_curr, cp_num, a, b, c, d, cu_width, cu_height, refined_mv, num, i);
             }
             if (!AFFINE_DMVR_memory_access(mod_info_curr, cu_width, cu_height, refined_mv))
             {
