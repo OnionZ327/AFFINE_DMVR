@@ -305,7 +305,7 @@
 #define AFFINE_DMVR_ITER_COUNT             3
 #endif
 #if AFFINE_PARA
-#define AFFINE_PARA_ITER_COUNT             2
+#define AFFINE_PARA_ITER_COUNT             3
 #endif
 /* IC_AVS3 (START) */
 #if IPC

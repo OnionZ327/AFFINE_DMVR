@@ -7153,7 +7153,6 @@ void process_AFFINEDMVR(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)
             }
         }
     }
-    min_cost = min_cost;
 }
 #endif
 
@@ -7402,15 +7401,10 @@ void process_AFFINEPARA(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)
     int a_initial[2], b_initial[2], c_initial[2], d_initial[2];
     get_initial_affine_para(mod_info_curr, cp_mv, a_initial, b_initial, c_initial, d_initial);
     int a[2], b[2], c[2], d[2];
-    int delta_a = 0, delta_b = 0, delta_c = 0, delta_d = 0;
     for (int num = 0; num < cp_num; num++)
     {
         cost_temp[0][0] = min_cost;
         affine_para_iter_count = 0;
-        delta_a = 0;
-        delta_b = 0;
-        delta_c = 0;
-        delta_d = 0;
         last_dir = 0;
         while (1)
         {
@@ -7535,26 +7529,26 @@ void process_AFFINEPARA(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)
                 }
                 if (cp_num == 3)
                 {
-                    a[0] = a_initial[0] + (cp3_search_offset_a[idx] + delta_a) * step;
-                    b[0] = b_initial[0] + (cp3_search_offset_b[idx] + delta_b) * step;
-                    c[0] = c_initial[0] + (cp3_search_offset_c[idx] + delta_c) * step;
-                    d[0] = d_initial[0] + (cp3_search_offset_d[idx] + delta_d) * step;
+                    a[0] = a_initial[0] + cp3_search_offset_a[idx] * step;
+                    b[0] = b_initial[0] + cp3_search_offset_b[idx] * step;
+                    c[0] = c_initial[0] + cp3_search_offset_c[idx] * step;
+                    d[0] = d_initial[0] + cp3_search_offset_d[idx] * step;
 
-                    a[1] = a_initial[1] - (cp3_search_offset_a[idx] + delta_a) * step;
-                    b[1] = b_initial[1] - (cp3_search_offset_b[idx] + delta_b) * step;
-                    c[1] = c_initial[1] - (cp3_search_offset_c[idx] + delta_c) * step;
-                    d[1] = d_initial[1] - (cp3_search_offset_d[idx] + delta_d) * step;
+                    a[1] = a_initial[1] - cp3_search_offset_a[idx] * step;
+                    b[1] = b_initial[1] - cp3_search_offset_b[idx] * step;
+                    c[1] = c_initial[1] - cp3_search_offset_c[idx] * step;
+                    d[1] = d_initial[1] - cp3_search_offset_d[idx] * step;
                 }
                 else
                 {
-                    a[0] = a_initial[0] + (cp2_search_offset_a[idx] + delta_a) * step;
-                    b[0] = b_initial[0] + (cp2_search_offset_b[idx] + delta_b) * step;
-                    c[0] = - b[0];
+                    a[0] = a_initial[0] + cp2_search_offset_a[idx] * step;
+                    b[0] = b_initial[0] + cp2_search_offset_b[idx] * step;
+                    c[0] = -b[0];
                     d[0] = a[0];
 
-                    a[1] = a_initial[1] - (cp2_search_offset_a[idx] + delta_a) * step;
-                    b[1] = b_initial[1] - (cp2_search_offset_b[idx] + delta_b) * step;
-                    c[1] = - b[1];
+                    a[1] = a_initial[1] - cp2_search_offset_a[idx] * step;
+                    b[1] = b_initial[1] - cp2_search_offset_b[idx] * step;
+                    c[1] = -b[1];
                     d[1] = a[1];
                 }
                 for (int i = 0; i < REFP_NUM; i++)
@@ -7569,88 +7563,112 @@ void process_AFFINEPARA(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)
                 }
                 cost_temp[idx / 3][idx % 3] = cost;
             }
-            if (num == 0 && dir == 0)
+            if (affine_para_iter_count == 0 && dir == 0)
             {
                 return;
             }
-            if (cp_num == 3)
-            {
-                delta_a += cp3_search_offset_a[dir];
-                delta_b += cp3_search_offset_b[dir];
-                delta_c += cp3_search_offset_c[dir];
-                delta_d += cp3_search_offset_d[dir];
-            }
-            else
-            {
-                delta_a += cp2_search_offset_a[dir];
-                delta_b += cp2_search_offset_b[dir];
-            }
-            affine_para_iter_count++;
-            last_dir = dir;
-            if (min_cost == 0 || dir == 0 || affine_para_iter_count == AFFINE_PARA_ITER_COUNT)
+            if (min_cost == 0 || dir == 0)
             {
                 break;
             }
             if (cp_num == 3)
             {
-                cost_temp[0][0] = cost_temp[dir / 3][dir % 3];
-            }
-        }
-        for (int i = 0; i < REFP_NUM; i++)
-        {
-            if (i == 0)
-            {
-                if (cp_num == 3)
-                {
-                    a_initial[i] += delta_a * step;
-                    b_initial[i] += delta_b * step;
-                    c_initial[i] += delta_c * step;
-                    d_initial[i] += delta_d * step;
-                }
-                else
-                {
-                    a_initial[i] += delta_a * step;
-                    b_initial[i] += delta_b * step;
-                    c_initial[i] = -b_initial[i];
-                    d_initial[i] = a_initial[i];
-                }
+                a[0] = a_initial[0] + cp3_search_offset_a[dir] * step;
+                b[0] = b_initial[0] + cp3_search_offset_b[dir] * step;
+                c[0] = c_initial[0] + cp3_search_offset_c[dir] * step;
+                d[0] = d_initial[0] + cp3_search_offset_d[dir] * step;
+
+                a[1] = a_initial[1] - cp3_search_offset_a[dir] * step;
+                b[1] = b_initial[1] - cp3_search_offset_b[dir] * step;
+                c[1] = c_initial[1] - cp3_search_offset_c[dir] * step;
+                d[1] = d_initial[1] - cp3_search_offset_d[dir] * step;
             }
             else
             {
-                if (cp_num == 3)
-                {
-                    a_initial[i] -= delta_a * step;
-                    b_initial[i] -= delta_b * step;
-                    c_initial[i] -= delta_c * step;
-                    d_initial[i] -= delta_d * step;
-                }
-                else
-                {
-                    a_initial[i] -= delta_a * step;
-                    b_initial[i] -= delta_b * step;
-                    c_initial[i] = -b_initial[i];
-                    d_initial[i] = a_initial[i];
-                }
+                a[0] = a_initial[0] + cp2_search_offset_a[dir] * step;
+                b[0] = b_initial[0] + cp2_search_offset_b[dir] * step;
+                c[0] = -b[0];
+                d[0] = a[0];
+
+                a[1] = a_initial[1] - cp2_search_offset_a[dir] * step;
+                b[1] = b_initial[1] - cp2_search_offset_b[dir] * step;
+                c[1] = -b[1];
+                d[1] = a[1];
             }
-            refine_cpmv(mod_info_curr, cp_num, a_initial, b_initial, c_initial, d_initial, cu_width, cu_height, cp_mv, num, i);
-        }
-        if (!AFFINE_DMVR_memory_access(mod_info_curr, cu_width, cu_height, cp_mv))
-        {
-            return;
-        }
-        else
-        {
             for (int i = 0; i < REFP_NUM; i++)
             {
                 for (int ver = 0; ver < cp_num; ver++)
                 {
-                    mv[i][ver][MV_X] = cp_mv[i][ver][MV_X];
-                    mv[i][ver][MV_Y] = cp_mv[i][ver][MV_Y];
+                    refined_mv[i][ver][MV_X] = cp_mv[i][ver][MV_X];
+                    refined_mv[i][ver][MV_Y] = cp_mv[i][ver][MV_Y];
                 }
+                refine_cpmv(mod_info_curr, cp_num, a_initial, b_initial, c_initial, d_initial, cu_width, cu_height, refined_mv, num, i);
+            }
+            if (!AFFINE_DMVR_memory_access(mod_info_curr, cu_width, cu_height, refined_mv))
+            {
+                break;
+            }
+            else
+            {
+                for (int i = 0; i < REFP_NUM; i++)
+                {
+                    if (i == 0)
+                    {
+                        if (cp_num == 3)
+                        {
+                            a_initial[i] += cp3_search_offset_a[dir] * step;
+                            b_initial[i] += cp3_search_offset_b[dir] * step;
+                            c_initial[i] += cp3_search_offset_c[dir] * step;
+                            d_initial[i] += cp3_search_offset_d[dir] * step;
+                        }
+                        else
+                        {
+                            a_initial[i] += cp2_search_offset_a[dir] * step;
+                            b_initial[i] += cp2_search_offset_b[dir] * step;
+                            c_initial[i] = -b_initial[i];
+                            d_initial[i] = a_initial[i];
+                        }
+                    }
+                    else
+                    {
+                        if (cp_num == 3)
+                        {
+                            a_initial[i] -= cp3_search_offset_a[dir] * step;
+                            b_initial[i] -= cp3_search_offset_b[dir] * step;
+                            c_initial[i] -= cp3_search_offset_c[dir] * step;
+                            d_initial[i] -= cp3_search_offset_d[dir] * step;
+                        }
+                        else
+                        {
+                            a_initial[i] -= cp2_search_offset_a[dir] * step;
+                            b_initial[i] -= cp2_search_offset_b[dir] * step;
+                            c_initial[i] = -b_initial[i];
+                            d_initial[i] = a_initial[i];
+                        }
+                    }
+                }
+            }
+            affine_para_iter_count++;
+            if (affine_para_iter_count == AFFINE_PARA_ITER_COUNT)
+            {
+                break;
+            }
+            last_dir = dir;
+            if (cp_num == 3)
+            {
+                cost_temp[0][0] = cost_temp[dir / 3][dir % 3];
+            }
+        }//while
+        for (int i = 0; i < REFP_NUM; i++)
+        {
+            refine_cpmv(mod_info_curr, cp_num, a_initial, b_initial, c_initial, d_initial, cu_width, cu_height, cp_mv, num, i);
+            for (int ver = 0; ver < cp_num; ver++)
+            {
+                mv[i][ver][MV_X] = cp_mv[i][ver][MV_X];
+                mv[i][ver][MV_Y] = cp_mv[i][ver][MV_Y];
             }
         }
     }
-    min_cost = min_cost;
 }
 #endif
 void com_mc(int x, int y, int w, int h, int pred_stride, pel pred_buf[N_C][MAX_CU_DIM], COM_INFO *info, COM_MODE *mod_info_curr, COM_REFP(*refp)[REFP_NUM], CHANNEL_TYPE channel, int bit_depth
