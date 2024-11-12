@@ -1,4 +1,4 @@
-# Install script for directory: E:/AFFINE_DMVR
+# Install script for directory: E:/DAMR
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -34,8 +34,8 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("E:/AFFINE_DMVR/build_cmake/src/cmake_install.cmake")
-  include("E:/AFFINE_DMVR/build_cmake/app/cmake_install.cmake")
+  include("E:/DAMR/build_cmake/src/cmake_install.cmake")
+  include("E:/DAMR/build_cmake/app/cmake_install.cmake")
 
 endif()
 
@@ -54,6 +54,6 @@ endif()
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-  file(WRITE "E:/AFFINE_DMVR/build_cmake/${CMAKE_INSTALL_MANIFEST}"
+  file(WRITE "E:/DAMR/build_cmake/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
 endif()

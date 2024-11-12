@@ -22,7 +22,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{A7520055-BAA6-3039-9FD4-1443CD83F240}</ProjectGuid>
+    <ProjectGuid>{632892E0-3C15-31A2-927F-3D655003663D}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <WindowsTargetPlatformVersion>10.0.22621.0</WindowsTargetPlatformVersion>
     <Platform>x64</Platform>
@@ -59,26 +59,26 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">E:\AFFINE_DMVR\build_cmake\src\Debug\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">E:\DAMR\build_cmake\src\Debug\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">EncoderLib.dir\Debug\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">EncoderLib</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.lib</TargetExt>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">E:\AFFINE_DMVR\build_cmake\src\Release\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">E:\DAMR\build_cmake\src\Release\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">EncoderLib.dir\Release\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">EncoderLib</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.lib</TargetExt>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">E:\AFFINE_DMVR\build_cmake\src\MinSizeRel\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">E:\DAMR\build_cmake\src\MinSizeRel\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">EncoderLib.dir\MinSizeRel\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">EncoderLib</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.lib</TargetExt>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">E:\AFFINE_DMVR\build_cmake\src\RelWithDebInfo\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">E:\DAMR\build_cmake\src\RelWithDebInfo\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">EncoderLib.dir\RelWithDebInfo\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">EncoderLib</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.lib</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>E:\AFFINE_DMVR\src\..\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\DAMR\src\..\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -99,10 +99,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>E:\AFFINE_DMVR\src\..\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\DAMR\src\..\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>E:\AFFINE_DMVR\src\..\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\DAMR\src\..\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -115,7 +115,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>E:\AFFINE_DMVR\src\..\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\DAMR\src\..\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <DisableSpecificWarnings>4996</DisableSpecificWarnings>
@@ -137,10 +137,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>E:\AFFINE_DMVR\src\..\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\DAMR\src\..\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>E:\AFFINE_DMVR\src\..\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\DAMR\src\..\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -153,7 +153,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>E:\AFFINE_DMVR\src\..\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\DAMR\src\..\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <DisableSpecificWarnings>4996</DisableSpecificWarnings>
@@ -175,10 +175,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>E:\AFFINE_DMVR\src\..\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\DAMR\src\..\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>E:\AFFINE_DMVR\src\..\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\DAMR\src\..\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -191,7 +191,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>E:\AFFINE_DMVR\src\..\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\DAMR\src\..\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -212,10 +212,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>E:\AFFINE_DMVR\src\..\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\DAMR\src\..\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>E:\AFFINE_DMVR\src\..\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\DAMR\src\..\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -227,11 +227,11 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CustomBuild Include="E:\AFFINE_DMVR\src\CMakeLists.txt">
+    <CustomBuild Include="E:\DAMR\src\CMakeLists.txt">
       <UseUtf8Encoding>Always</UseUtf8Encoding>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule E:/AFFINE_DMVR/src/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule E:/DAMR/src/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
-D:\NormalApp\CMake\bin\cmake.exe -SE:/AFFINE_DMVR -BE:/AFFINE_DMVR/build_cmake --check-stamp-file E:/AFFINE_DMVR/build_cmake/src/CMakeFiles/generate.stamp
+D:\NormalApp\CMake\bin\cmake.exe -SE:/DAMR -BE:/DAMR/build_cmake --check-stamp-file E:/DAMR/build_cmake/src/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -240,11 +240,11 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">E:\AFFINE_DMVR\build_cmake\src\CMakeFiles\generate.stamp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">E:\DAMR\build_cmake\src\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule E:/AFFINE_DMVR/src/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule E:/DAMR/src/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
-D:\NormalApp\CMake\bin\cmake.exe -SE:/AFFINE_DMVR -BE:/AFFINE_DMVR/build_cmake --check-stamp-file E:/AFFINE_DMVR/build_cmake/src/CMakeFiles/generate.stamp
+D:\NormalApp\CMake\bin\cmake.exe -SE:/DAMR -BE:/DAMR/build_cmake --check-stamp-file E:/DAMR/build_cmake/src/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -253,11 +253,11 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">E:\AFFINE_DMVR\build_cmake\src\CMakeFiles\generate.stamp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">E:\DAMR\build_cmake\src\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule E:/AFFINE_DMVR/src/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule E:/DAMR/src/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
-D:\NormalApp\CMake\bin\cmake.exe -SE:/AFFINE_DMVR -BE:/AFFINE_DMVR/build_cmake --check-stamp-file E:/AFFINE_DMVR/build_cmake/src/CMakeFiles/generate.stamp
+D:\NormalApp\CMake\bin\cmake.exe -SE:/DAMR -BE:/DAMR/build_cmake --check-stamp-file E:/DAMR/build_cmake/src/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -266,11 +266,11 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">E:\AFFINE_DMVR\build_cmake\src\CMakeFiles\generate.stamp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">E:\DAMR\build_cmake\src\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule E:/AFFINE_DMVR/src/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule E:/DAMR/src/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
-D:\NormalApp\CMake\bin\cmake.exe -SE:/AFFINE_DMVR -BE:/AFFINE_DMVR/build_cmake --check-stamp-file E:/AFFINE_DMVR/build_cmake/src/CMakeFiles/generate.stamp
+D:\NormalApp\CMake\bin\cmake.exe -SE:/DAMR -BE:/DAMR/build_cmake --check-stamp-file E:/DAMR/build_cmake/src/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -279,60 +279,60 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">E:\AFFINE_DMVR\build_cmake\src\CMakeFiles\generate.stamp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">E:\DAMR\build_cmake\src\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="E:\AFFINE_DMVR\src\enc.c" />
-    <ClCompile Include="E:\AFFINE_DMVR\src\enc_EncAdaptiveLoopFilter.c" />
-    <ClCompile Include="E:\AFFINE_DMVR\src\enc_bsw.c" />
-    <ClCompile Include="E:\AFFINE_DMVR\src\enc_eco.c" />
-    <ClCompile Include="E:\AFFINE_DMVR\src\enc_esao.c" />
-    <ClCompile Include="E:\AFFINE_DMVR\src\enc_ibc_hashmap.cpp" />
-    <ClCompile Include="E:\AFFINE_DMVR\src\enc_mode.c" />
-    <ClCompile Include="E:\AFFINE_DMVR\src\enc_optimization.cpp" />
-    <ClCompile Include="E:\AFFINE_DMVR\src\enc_pibc.c" />
-    <ClCompile Include="E:\AFFINE_DMVR\src\enc_pinter.c" />
-    <ClCompile Include="E:\AFFINE_DMVR\src\enc_pintra.c" />
-    <ClCompile Include="E:\AFFINE_DMVR\src\enc_rsd_hashmap.cpp" />
-    <ClCompile Include="E:\AFFINE_DMVR\src\enc_sad.c" />
-    <ClCompile Include="E:\AFFINE_DMVR\src\enc_sp.cpp" />
-    <ClCompile Include="E:\AFFINE_DMVR\src\enc_tbl.c" />
-    <ClCompile Include="E:\AFFINE_DMVR\src\enc_temporalFilter.c" />
-    <ClCompile Include="E:\AFFINE_DMVR\src\enc_tq.c" />
-    <ClCompile Include="E:\AFFINE_DMVR\src\enc_util.c" />
-    <ClInclude Include="E:\AFFINE_DMVR\inc\enc_EncAdaptiveLoopFilter.h" />
-    <ClInclude Include="E:\AFFINE_DMVR\inc\enc_bsw.h" />
-    <ClInclude Include="E:\AFFINE_DMVR\inc\enc_def.h" />
-    <ClInclude Include="E:\AFFINE_DMVR\inc\enc_eco.h" />
-    <ClInclude Include="E:\AFFINE_DMVR\inc\enc_esao.h" />
-    <ClInclude Include="E:\AFFINE_DMVR\inc\enc_ibc_hash_wrapper.h" />
-    <ClInclude Include="E:\AFFINE_DMVR\inc\enc_ibc_hashmap.h" />
-    <ClInclude Include="E:\AFFINE_DMVR\inc\enc_mode.h" />
-    <ClInclude Include="E:\AFFINE_DMVR\inc\enc_optimization.h" />
-    <ClInclude Include="E:\AFFINE_DMVR\inc\enc_optimization_wrapper.h" />
-    <ClInclude Include="E:\AFFINE_DMVR\inc\enc_pibc.h" />
-    <ClInclude Include="E:\AFFINE_DMVR\inc\enc_pinter.h" />
-    <ClInclude Include="E:\AFFINE_DMVR\inc\enc_pintra.h" />
-    <ClInclude Include="E:\AFFINE_DMVR\inc\enc_rsd_hash_wrapper.h" />
-    <ClInclude Include="E:\AFFINE_DMVR\inc\enc_rsd_hashmap.h" />
-    <ClInclude Include="E:\AFFINE_DMVR\inc\enc_sad.h" />
-    <ClInclude Include="E:\AFFINE_DMVR\inc\enc_sp.h" />
-    <ClInclude Include="E:\AFFINE_DMVR\inc\enc_tbl.h" />
-    <ClInclude Include="E:\AFFINE_DMVR\inc\enc_temporalFilter.h" />
-    <ClInclude Include="E:\AFFINE_DMVR\inc\enc_tq.h" />
-    <ClInclude Include="E:\AFFINE_DMVR\inc\enc_util.h" />
+    <ClCompile Include="E:\DAMR\src\enc.c" />
+    <ClCompile Include="E:\DAMR\src\enc_EncAdaptiveLoopFilter.c" />
+    <ClCompile Include="E:\DAMR\src\enc_bsw.c" />
+    <ClCompile Include="E:\DAMR\src\enc_eco.c" />
+    <ClCompile Include="E:\DAMR\src\enc_esao.c" />
+    <ClCompile Include="E:\DAMR\src\enc_ibc_hashmap.cpp" />
+    <ClCompile Include="E:\DAMR\src\enc_mode.c" />
+    <ClCompile Include="E:\DAMR\src\enc_optimization.cpp" />
+    <ClCompile Include="E:\DAMR\src\enc_pibc.c" />
+    <ClCompile Include="E:\DAMR\src\enc_pinter.c" />
+    <ClCompile Include="E:\DAMR\src\enc_pintra.c" />
+    <ClCompile Include="E:\DAMR\src\enc_rsd_hashmap.cpp" />
+    <ClCompile Include="E:\DAMR\src\enc_sad.c" />
+    <ClCompile Include="E:\DAMR\src\enc_sp.cpp" />
+    <ClCompile Include="E:\DAMR\src\enc_tbl.c" />
+    <ClCompile Include="E:\DAMR\src\enc_temporalFilter.c" />
+    <ClCompile Include="E:\DAMR\src\enc_tq.c" />
+    <ClCompile Include="E:\DAMR\src\enc_util.c" />
+    <ClInclude Include="E:\DAMR\inc\enc_EncAdaptiveLoopFilter.h" />
+    <ClInclude Include="E:\DAMR\inc\enc_bsw.h" />
+    <ClInclude Include="E:\DAMR\inc\enc_def.h" />
+    <ClInclude Include="E:\DAMR\inc\enc_eco.h" />
+    <ClInclude Include="E:\DAMR\inc\enc_esao.h" />
+    <ClInclude Include="E:\DAMR\inc\enc_ibc_hash_wrapper.h" />
+    <ClInclude Include="E:\DAMR\inc\enc_ibc_hashmap.h" />
+    <ClInclude Include="E:\DAMR\inc\enc_mode.h" />
+    <ClInclude Include="E:\DAMR\inc\enc_optimization.h" />
+    <ClInclude Include="E:\DAMR\inc\enc_optimization_wrapper.h" />
+    <ClInclude Include="E:\DAMR\inc\enc_pibc.h" />
+    <ClInclude Include="E:\DAMR\inc\enc_pinter.h" />
+    <ClInclude Include="E:\DAMR\inc\enc_pintra.h" />
+    <ClInclude Include="E:\DAMR\inc\enc_rsd_hash_wrapper.h" />
+    <ClInclude Include="E:\DAMR\inc\enc_rsd_hashmap.h" />
+    <ClInclude Include="E:\DAMR\inc\enc_sad.h" />
+    <ClInclude Include="E:\DAMR\inc\enc_sp.h" />
+    <ClInclude Include="E:\DAMR\inc\enc_tbl.h" />
+    <ClInclude Include="E:\DAMR\inc\enc_temporalFilter.h" />
+    <ClInclude Include="E:\DAMR\inc\enc_tq.h" />
+    <ClInclude Include="E:\DAMR\inc\enc_util.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="E:\AFFINE_DMVR\build_cmake\ZERO_CHECK.vcxproj">
-      <Project>{DCDFE80A-17BD-35E5-B511-9B8AAF3D87ED}</Project>
+    <ProjectReference Include="E:\DAMR\build_cmake\ZERO_CHECK.vcxproj">
+      <Project>{C6F453BF-EAA5-31CD-805C-895679B7F7B4}</Project>
       <Name>ZERO_CHECK</Name>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </ProjectReference>
-    <ProjectReference Include="E:\AFFINE_DMVR\build_cmake\src\CommonLib.vcxproj">
-      <Project>{9EE67A5A-323D-36B2-BCA3-CC7B6B9B596A}</Project>
+    <ProjectReference Include="E:\DAMR\build_cmake\src\CommonLib.vcxproj">
+      <Project>{06BE4EF7-EC5E-3792-A388-726BE51B2F90}</Project>
       <Name>CommonLib</Name>
     </ProjectReference>
   </ItemGroup>

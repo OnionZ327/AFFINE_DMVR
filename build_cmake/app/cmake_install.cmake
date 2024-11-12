@@ -1,4 +1,4 @@
-# Install script for directory: E:/AFFINE_DMVR/app
+# Install script for directory: E:/DAMR/app
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

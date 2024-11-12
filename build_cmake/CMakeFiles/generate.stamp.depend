@@ -98,8 +98,8 @@ D:/NormalApp/CMake/share/cmake-3.30/Modules/Platform/Windows-MSVC-CXX.cmake
 D:/NormalApp/CMake/share/cmake-3.30/Modules/Platform/Windows-MSVC.cmake
 D:/NormalApp/CMake/share/cmake-3.30/Modules/Platform/Windows.cmake
 D:/NormalApp/CMake/share/cmake-3.30/Modules/Platform/WindowsPaths.cmake
-E:/AFFINE_DMVR/CMakeLists.txt
-E:/AFFINE_DMVR/build_cmake/CMakeFiles/3.30.0/CMakeCCompiler.cmake
-E:/AFFINE_DMVR/build_cmake/CMakeFiles/3.30.0/CMakeCXXCompiler.cmake
-E:/AFFINE_DMVR/build_cmake/CMakeFiles/3.30.0/CMakeRCCompiler.cmake
-E:/AFFINE_DMVR/build_cmake/CMakeFiles/3.30.0/CMakeSystem.cmake
+E:/DAMR/CMakeLists.txt
+E:/DAMR/build_cmake/CMakeFiles/3.30.0/CMakeCCompiler.cmake
+E:/DAMR/build_cmake/CMakeFiles/3.30.0/CMakeCXXCompiler.cmake
+E:/DAMR/build_cmake/CMakeFiles/3.30.0/CMakeRCCompiler.cmake
+E:/DAMR/build_cmake/CMakeFiles/3.30.0/CMakeSystem.cmake

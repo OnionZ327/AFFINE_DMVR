@@ -1,16 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="E:\AFFINE_DMVR\app\app_bitstream_merge.c">
+    <ClCompile Include="E:\DAMR\app\app_bitstream_merge.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="E:\AFFINE_DMVR\app\CMakeLists.txt" />
+    <CustomBuild Include="E:\DAMR\app\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{231ADAC2-D28A-3E44-A32F-5E13CF01B5AA}</UniqueIdentifier>
+      <UniqueIdentifier>{99A0D449-0B8F-3CD7-AD42-FC426B66DCC0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

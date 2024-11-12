@@ -1,102 +1,102 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="E:\AFFINE_DMVR\src\com_ComAdaptiveLoopFilter.c">
+    <ClCompile Include="E:\DAMR\src\com_ComAdaptiveLoopFilter.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="E:\AFFINE_DMVR\src\com_df.c">
+    <ClCompile Include="E:\DAMR\src\com_df.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="E:\AFFINE_DMVR\src\com_esao.c">
+    <ClCompile Include="E:\DAMR\src\com_esao.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="E:\AFFINE_DMVR\src\com_img.c">
+    <ClCompile Include="E:\DAMR\src\com_img.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="E:\AFFINE_DMVR\src\com_ipred.c">
+    <ClCompile Include="E:\DAMR\src\com_ipred.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="E:\AFFINE_DMVR\src\com_itdq.c">
+    <ClCompile Include="E:\DAMR\src\com_itdq.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="E:\AFFINE_DMVR\src\com_mc.c">
+    <ClCompile Include="E:\DAMR\src\com_mc.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="E:\AFFINE_DMVR\src\com_picman.c">
+    <ClCompile Include="E:\DAMR\src\com_picman.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="E:\AFFINE_DMVR\src\com_recon.c">
+    <ClCompile Include="E:\DAMR\src\com_recon.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="E:\AFFINE_DMVR\src\com_sao.c">
+    <ClCompile Include="E:\DAMR\src\com_sao.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="E:\AFFINE_DMVR\src\com_tbl.c">
+    <ClCompile Include="E:\DAMR\src\com_tbl.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="E:\AFFINE_DMVR\src\com_util.c">
+    <ClCompile Include="E:\DAMR\src\com_util.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="E:\AFFINE_DMVR\inc\com_ComAdaptiveLoopFilter.h">
+    <ClInclude Include="E:\DAMR\inc\com_ComAdaptiveLoopFilter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="E:\AFFINE_DMVR\inc\com_def.h">
+    <ClInclude Include="E:\DAMR\inc\com_def.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="E:\AFFINE_DMVR\inc\com_df.h">
+    <ClInclude Include="E:\DAMR\inc\com_df.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="E:\AFFINE_DMVR\inc\com_esao.h">
+    <ClInclude Include="E:\DAMR\inc\com_esao.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="E:\AFFINE_DMVR\inc\com_img.h">
+    <ClInclude Include="E:\DAMR\inc\com_img.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="E:\AFFINE_DMVR\inc\com_ipred.h">
+    <ClInclude Include="E:\DAMR\inc\com_ipred.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="E:\AFFINE_DMVR\inc\com_itdq.h">
+    <ClInclude Include="E:\DAMR\inc\com_itdq.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="E:\AFFINE_DMVR\inc\com_mc.h">
+    <ClInclude Include="E:\DAMR\inc\com_mc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="E:\AFFINE_DMVR\inc\com_picman.h">
+    <ClInclude Include="E:\DAMR\inc\com_picman.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="E:\AFFINE_DMVR\inc\com_port.h">
+    <ClInclude Include="E:\DAMR\inc\com_port.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="E:\AFFINE_DMVR\inc\com_recon.h">
+    <ClInclude Include="E:\DAMR\inc\com_recon.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="E:\AFFINE_DMVR\inc\com_sao.h">
+    <ClInclude Include="E:\DAMR\inc\com_sao.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="E:\AFFINE_DMVR\inc\com_tbl.h">
+    <ClInclude Include="E:\DAMR\inc\com_tbl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="E:\AFFINE_DMVR\inc\com_typedef.h">
+    <ClInclude Include="E:\DAMR\inc\com_typedef.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="E:\AFFINE_DMVR\inc\com_usp.h">
+    <ClInclude Include="E:\DAMR\inc\com_usp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="E:\AFFINE_DMVR\inc\com_util.h">
+    <ClInclude Include="E:\DAMR\inc\com_util.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="E:\AFFINE_DMVR\src\CMakeLists.txt" />
+    <CustomBuild Include="E:\DAMR\src\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
-      <UniqueIdentifier>{B195E4E2-CC5E-3BC2-832B-EBC149E9064F}</UniqueIdentifier>
+      <UniqueIdentifier>{905DC420-AB9E-31D9-848F-012108ADB0B9}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{231ADAC2-D28A-3E44-A32F-5E13CF01B5AA}</UniqueIdentifier>
+      <UniqueIdentifier>{99A0D449-0B8F-3CD7-AD42-FC426B66DCC0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
