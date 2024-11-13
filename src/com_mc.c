@@ -7457,6 +7457,10 @@ void process_AFFINEPARA(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)
     int a_initial[2], b_initial[2], c_initial[2], d_initial[2];
     get_initial_affine_para(mod_info_curr, cp_mv, a_initial, b_initial, c_initial, d_initial);
     int a[2], b[2], c[2], d[2];
+    if (cp_num == 3 && (cu_width + cu_height >= 192))
+    {
+        return;
+    }
     for (int num = 0; num < cp_num; num++)
     {
         cost_temp[0][0] = min_cost;
