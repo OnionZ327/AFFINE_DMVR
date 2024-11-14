@@ -6778,62 +6778,36 @@ void process_DMVR( int x, int y, int pic_w, int pic_h, int w, int h, s8 refi[REF
 #endif
 
 #if DAMR
-s32 com_DAMR_cost(int w, int h, pel* src1, pel* src2, int bit_depth)
+s32 com_DAMR_cost(int w, int h, pel* src1, pel* src2, int bit_depth, int sub_w, int sub_h)
 {
-    int sad;
+    int sad = 0;
     s16* s1;
     s16* s2;
-    __m128i s00, s01, sac0, sac1;
     int i, j;
+    int m, n;
     s1 = (s16*)src1;
     s2 = (s16*)src2;
-    sac0 = _mm_setzero_si128();
-    sac1 = _mm_setzero_si128();
-
-    if (w & 0x07)
+    for (m = 0; m < h / sub_h; m++)
     {
-        for (i = 0; i < (h >> 2); i++)
+        for (n = 0; n < sub_w; n++)
         {
-            for (j = 0; j < w; j += 4)
+            for (i = 0; i < w / sub_w; i++)
             {
-                SSE_SAD_16B_4PEL(s1 + j, s2 + j, s00, s01, sac0);
-                SSE_SAD_16B_4PEL(s1 + j + w, s2 + j + w, s00, s01, sac0);
-                SSE_SAD_16B_4PEL(s1 + j + w * 2, s2 + j + w * 2, s00, s01, sac0);
-                SSE_SAD_16B_4PEL(s1 + j + w * 3, s2 + j + w * 3, s00, s01, sac0);
+                for (j = 0; j < sub_w; j++)
+                {
+                    sad += COM_ABS16((s16)s1[j + i * (sub_w + 2 * AFFINE_DMVR_ITER_COUNT) + n * (MAX_CU_SIZE + (MAX_CU_SIZE >> 3) * AFFINE_DMVR_ITER_COUNT * 2)] - (s16)s2[j + i * (sub_w + 2 * AFFINE_DMVR_ITER_COUNT)+ n * (MAX_CU_SIZE + (MAX_CU_SIZE >> 3) * AFFINE_DMVR_ITER_COUNT * 2)]);
+                }
             }
-            s1 += w << 2;
-            s2 += w << 2;
         }
-        sad = _mm_extract_epi32(sac0, 0);
-        sad += _mm_extract_epi32(sac0, 1);
-        sad += _mm_extract_epi32(sac0, 2);
-        sad += _mm_extract_epi32(sac0, 3);
-    }
-    else
-    {
-        for (i = 0; i < (h >> 2); i++)
-        {
-            for (j = 0; j < w; j += 8)
-            {
-                SSE_SAD_16B_8PEL(s1 + j, s2 + j, s00, s01, sac0);
-                SSE_SAD_16B_8PEL(s1 + j + w, s2 + j + w, s00, s01, sac0);
-                SSE_SAD_16B_8PEL(s1 + j + w * 2, s2 + j + w * 2, s00, s01, sac0);
-                SSE_SAD_16B_8PEL(s1 + j + w * 3, s2 + j + w * 3, s00, s01, sac0);
-            }
-            s1 += w << 2;
-            s2 += w << 2;
-        }
-        sad = _mm_extract_epi32(sac0, 0);
-        sad += _mm_extract_epi32(sac0, 1);
-        sad += _mm_extract_epi32(sac0, 2);
-        sad += _mm_extract_epi32(sac0, 3);
+        src1 += (sub_h + 2 * AFFINE_DMVR_ITER_COUNT) * (MAX_CU_SIZE + (MAX_CU_SIZE >> 3) * AFFINE_DMVR_ITER_COUNT * 2);
+        src2 += (sub_h + 2 * AFFINE_DMVR_ITER_COUNT) * (MAX_CU_SIZE + (MAX_CU_SIZE >> 3) * AFFINE_DMVR_ITER_COUNT * 2);
     }
 
     return (sad >> (bit_depth - 8));;
 }
 #endif
 #if AFFINE_DMVR
-void com_affine_dmvr_mc_lc(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)[REFP_NUM], pel(*affine_dmvr_y)[MAX_CU_DIM], CPMV cp_mv[REFP_NUM][VER_NUM][MV_D], int sub_w, int sub_h, int i, int bit_depth)
+void com_affine_dmvr_mc_lc(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)[REFP_NUM], pel(*affine_dmvr_y)[(MAX_CU_SIZE + (MAX_CU_SIZE >> 3) * AFFINE_DMVR_ITER_COUNT * 2) * (MAX_CU_SIZE + (MAX_CU_SIZE >> 3) * AFFINE_DMVR_ITER_COUNT * 2)], CPMV cp_mv[REFP_NUM][VER_NUM][MV_D], int sub_w, int sub_h, int i, int bit_depth)
 {
     s8* refi = mod_info_curr->refi;
     int pic_w = info->pic_width;
@@ -6848,7 +6822,6 @@ void com_affine_dmvr_mc_lc(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*re
     s32 mv_scale_tmp_hor_ori, mv_scale_tmp_ver_ori;
     s32 mv_scale_tmp_hor, mv_scale_tmp_ver;
     int cp_num = mod_info_curr->affine_flag + 1;
-    s32 mv_save[MAX_CU_SIZE >> MIN_CU_LOG2][MAX_CU_SIZE >> MIN_CU_LOG2][MV_D];
     int dmv_hor_x, dmv_ver_x, dmv_hor_y, dmv_ver_y;
     int qpel_gmv_x, qpel_gmv_y;
     pel* pred = affine_dmvr_y[i];
@@ -6908,33 +6881,56 @@ void com_affine_dmvr_mc_lc(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*re
 #else
             com_mv_rounding_s32(mv_scale_tmp_hor, mv_scale_tmp_ver, &mv_scale_tmp_hor, &mv_scale_tmp_ver, 5, 0);
 #endif
-            mv_scale_tmp_hor = COM_CLIP3(COM_INT18_MIN, COM_INT18_MAX, mv_scale_tmp_hor);
-            mv_scale_tmp_ver = COM_CLIP3(COM_INT18_MIN, COM_INT18_MAX, mv_scale_tmp_ver);
-            // save MVF for chroma interpolation
-            int w_scu = PEL2SCU(w);
-            int h_scu = PEL2SCU(h);
-            mv_save[w_scu][h_scu][MV_X] = mv_scale_tmp_hor;
-            mv_save[w_scu][h_scu][MV_Y] = mv_scale_tmp_ver;
-
-
-            mv_save[w_scu + 1][h_scu][MV_X] = mv_scale_tmp_hor;
-            mv_save[w_scu + 1][h_scu][MV_Y] = mv_scale_tmp_ver;
-            mv_save[w_scu][h_scu + 1][MV_X] = mv_scale_tmp_hor;
-            mv_save[w_scu][h_scu + 1][MV_Y] = mv_scale_tmp_ver;
-            mv_save[w_scu + 1][h_scu + 1][MV_X] = mv_scale_tmp_hor;
-            mv_save[w_scu + 1][h_scu + 1][MV_Y] = mv_scale_tmp_ver;
 
             // clip
-            mv_scale_tmp_hor_ori = mv_scale_tmp_hor;
+            /*mv_scale_tmp_hor_ori = mv_scale_tmp_hor;
             mv_scale_tmp_ver_ori = mv_scale_tmp_ver;
             mv_scale_tmp_hor = min(hor_max, max(hor_min, mv_scale_tmp_hor));
-            mv_scale_tmp_ver = min(ver_max, max(ver_min, mv_scale_tmp_ver));
+            mv_scale_tmp_ver = min(ver_max, max(ver_min, mv_scale_tmp_ver));*/
+            int p1, p2, p3, p4;
+            int interp_horiz;
+            int interp_vert;
+            int final_value;
             qpel_gmv_x = ((x + w) << 4) + mv_scale_tmp_hor;
             qpel_gmv_y = ((y + h) << 4) + mv_scale_tmp_ver;
-
-            com_mc_l_hp(mv_scale_tmp_hor_ori, mv_scale_tmp_ver_ori, ref_pic->y, qpel_gmv_x, qpel_gmv_y, ref_pic->stride_luma, cu_width, (pred + w), sub_w, sub_h, bit_depth);
+            int x_pixel = qpel_gmv_x >> 4;  // 获取整数部分，除以16
+            int x_frac = qpel_gmv_x & 15;   // 获取小数部分，即 1/16 像素精度
+            int y_pixel = qpel_gmv_y >> 4;  // 获取整数部分，除以16
+            int y_frac = qpel_gmv_y & 15;   // 获取小数部分，即 1/16 像素精度
+            if (w + sub_w == cu_width && h == 0)
+            {
+                x_pixel -= sub_w;
+            }
+            else if (w == 0 && h + sub_h == cu_height && cp_num == 3)
+            {
+                y_pixel -= sub_h;
+            }
+            else
+            {
+                x_pixel -= half_w;
+                y_pixel -= half_h;
+            }
+            if (h == 8)
+            {
+                h = 8;
+            }
+            for (int i = -AFFINE_DMVR_ITER_COUNT; i < sub_h + AFFINE_DMVR_ITER_COUNT; i++)
+            {
+                for (int j = -AFFINE_DMVR_ITER_COUNT; j < sub_w + AFFINE_DMVR_ITER_COUNT; j++)
+                {
+                    p1 = *(ref_pic->y + (y_pixel + i) * ref_pic->stride_luma + (x_pixel + j));
+                    p2 = *(ref_pic->y + (y_pixel + i) * ref_pic->stride_luma + (x_pixel + j) + 1);
+                    p3 = *(ref_pic->y + ((y_pixel + i) + 1) * ref_pic->stride_luma + (x_pixel + j));
+                    p4 = *(ref_pic->y + ((y_pixel + i) + 1) * ref_pic->stride_luma + (x_pixel + j) + 1);
+                    interp_horiz = ((16 - x_frac) * p1 + x_frac * p2) >> 4;
+                    interp_vert = ((16 - y_frac) * p3 + y_frac * p4) >> 4;
+                    pred[w / sub_w * (sub_w + AFFINE_DMVR_ITER_COUNT * 2) + j + AFFINE_DMVR_ITER_COUNT + (i + AFFINE_DMVR_ITER_COUNT) * (MAX_CU_SIZE + (MAX_CU_SIZE >> 3) * AFFINE_DMVR_ITER_COUNT * 2)] = ((16 - y_frac) * interp_horiz + y_frac * interp_vert) >> 4;
+                }
+            }
+            //com_mc_l_hp(mv_scale_tmp_hor_ori, mv_scale_tmp_ver_ori, ref_pic->y, qpel_gmv_x, qpel_gmv_y, ref_pic->stride_luma, cu_width, (pred + w), sub_w, sub_h, bit_depth);
         }
-        pred += (cu_width * sub_h);
+        pred += (MAX_CU_SIZE + (MAX_CU_SIZE >> 3) * AFFINE_DMVR_ITER_COUNT * 2) * (sub_h + 2 * AFFINE_DMVR_ITER_COUNT);
+        //pred += (cu_width * sub_h);
     }
 }
 s32 SAD_AFFINE_DMVR(int w, int h, void* src1, void* src2, int bit_depth)
@@ -6977,7 +6973,7 @@ void process_AFFINEDMVR(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)
     int cu_height = mod_info_curr->cu_height;
     int cp_num = mod_info_curr->affine_flag + 1;
     COM_PIC* ref_pic;
-    pel affine_dmvr_y[REFP_NUM][MAX_CU_DIM];
+    pel affine_dmvr_y[REFP_NUM][(MAX_CU_SIZE + (MAX_CU_SIZE >> 3) * AFFINE_DMVR_ITER_COUNT * 2) * (MAX_CU_SIZE + (MAX_CU_SIZE >> 3) * AFFINE_DMVR_ITER_COUNT * 2)];
     CPMV cp_mv[REFP_NUM][VER_NUM][MV_D] = {
     {
         {mv[REFP_0][0][MV_X],mv[REFP_0][0][MV_Y]},
@@ -7026,6 +7022,16 @@ void process_AFFINEDMVR(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)
     s32 center_x = 1;
     s32 center_y = 1;
     int affine_dmvr_iter_count = 0;
+    for (int i = 0; i < REFP_NUM; ++i)
+    {
+        com_affine_dmvr_mc_lc(info, mod_info_curr, refp, affine_dmvr_y, cp_mv, sub_w, sub_h, i, bit_depth);
+    }
+    pel* preds_centre_array[REFP_NUM];
+
+    preds_centre_array[REFP_0] = affine_dmvr_y[REFP_0] + AFFINE_DMVR_ITER_COUNT * ((MAX_CU_SIZE + (MAX_CU_SIZE >> 3) * AFFINE_DMVR_ITER_COUNT * 2) + 1);
+    preds_centre_array[REFP_1] = affine_dmvr_y[REFP_1] + AFFINE_DMVR_ITER_COUNT * ((MAX_CU_SIZE + (MAX_CU_SIZE >> 3) * AFFINE_DMVR_ITER_COUNT * 2) + 1);
+    pel* ref_0;
+    pel* ref_1;
     while (1)
     {
         dir = 0;
@@ -7080,31 +7086,10 @@ void process_AFFINEDMVR(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)
                     break;
                 }
             }
-
-            for (int i = 0; i < REFP_NUM; i++)
-            {
-                for (int ver = 0; ver < cp_num; ver++)
-                {
-                    if (i == 0)
-                    {
-                        cp_mv[i][ver][MV_X] = initial_mv[i][ver][MV_X] + ((search_offset_x[idx] + delta_x) << 2);
-                        cp_mv[i][ver][MV_Y] = initial_mv[i][ver][MV_Y] + ((search_offset_y[idx] + delta_y) << 2);
-                    }
-                    else
-                    {
-                        cp_mv[i][ver][MV_X] = initial_mv[i][ver][MV_X] - ((search_offset_x[idx] + delta_x) << 2);
-                        cp_mv[i][ver][MV_Y] = initial_mv[i][ver][MV_Y] - ((search_offset_y[idx] + delta_y) << 2);
-                    }
-                }
-            }
-
-            for (int i = 0; i < REFP_NUM; ++i)
-            {
-                com_affine_dmvr_mc_lc(info, mod_info_curr, refp, affine_dmvr_y, cp_mv, sub_w, sub_h, i, bit_depth);
-            }
-
+            ref_0 = preds_centre_array[REFP_0] + (delta_x + search_offset_x[idx]) + (delta_y + search_offset_y[idx]) * (MAX_CU_SIZE + (MAX_CU_SIZE >> 3) * AFFINE_DMVR_ITER_COUNT * 2);
+            ref_1 = preds_centre_array[REFP_1] - (delta_x + search_offset_x[idx]) - (delta_y + search_offset_y[idx]) * (MAX_CU_SIZE + (MAX_CU_SIZE >> 3) * AFFINE_DMVR_ITER_COUNT * 2);
             //cost = SAD_AFFINE_DMVR(cu_width, cu_height, affine_dmvr_y[0], affine_dmvr_y[1], bit_depth);
-            cost = com_DAMR_cost(cu_width, cu_height, affine_dmvr_y[0], affine_dmvr_y[1], bit_depth);
+            cost = com_DAMR_cost(cu_width, cu_height, ref_0, ref_1, bit_depth, sub_w, sub_h);
             if (cost < min_cost)
             {
                 min_cost = cost;
@@ -7120,13 +7105,13 @@ void process_AFFINEDMVR(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)
             {
                 if (i == 0)
                 {
-                    refined_mv[i][ver][MV_X] = initial_mv[i][ver][MV_X] + ((delta_x + search_offset_x[dir]) << 2);
-                    refined_mv[i][ver][MV_Y] = initial_mv[i][ver][MV_Y] + ((delta_y + search_offset_y[dir]) << 2);
+                    refined_mv[i][ver][MV_X] = initial_mv[i][ver][MV_X] + ((delta_x + search_offset_x[dir]) << 4);
+                    refined_mv[i][ver][MV_Y] = initial_mv[i][ver][MV_Y] + ((delta_y + search_offset_y[dir]) << 4);
                 }
                 else
                 {
-                    refined_mv[i][ver][MV_X] = initial_mv[i][ver][MV_X] - ((delta_x + search_offset_x[dir]) << 2);
-                    refined_mv[i][ver][MV_Y] = initial_mv[i][ver][MV_Y] - ((delta_y + search_offset_y[dir]) << 2);
+                    refined_mv[i][ver][MV_X] = initial_mv[i][ver][MV_X] - ((delta_x + search_offset_x[dir]) << 4);
+                    refined_mv[i][ver][MV_Y] = initial_mv[i][ver][MV_Y] - ((delta_y + search_offset_y[dir]) << 4);
                 }
             }
         }
@@ -7145,10 +7130,10 @@ void process_AFFINEDMVR(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)
         }
     }
 
-    delta_mvx += (delta_x << 2);
-    delta_mvy += (delta_y << 2);
+    delta_mvx += (delta_x << 4);
+    delta_mvy += (delta_y << 4);
 
-    if (min_cost && !last_dir && (min_cost == cost_temp[1][1])
+/*    if (min_cost && !last_dir && (min_cost == cost_temp[1][1])
         && (cost_temp[1][1] != INT_MAX)
         && (cost_temp[1][0] != INT_MAX)
         && (cost_temp[0][1] != INT_MAX)
@@ -7192,7 +7177,7 @@ void process_AFFINEDMVR(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)
         delta_mvy += deltaMv[MV_Y] >> 2;
 #endif
     }
-
+*/
     for (int i = 0; i < REFP_NUM; i++)
     {
         for (int ver = 0; ver < cp_num; ver++)
@@ -7612,7 +7597,7 @@ void process_AFFINEPARA(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)
                     com_affine_para_mc_lc(info, mod_info_curr, refp, affine_dmvr_y, cp_mv, sub_w, sub_h, i, bit_depth, a[i], b[i], c[i], d[i], num);
                 }
                 //cost = SAD_AFFINE_DMVR(cu_width, cu_height, affine_dmvr_y[0], affine_dmvr_y[1], bit_depth);
-                cost = com_DAMR_cost(cu_width, cu_height, affine_dmvr_y[0], affine_dmvr_y[1], bit_depth);
+                cost = com_DAMR_cost(cu_width, cu_height, affine_dmvr_y[0], affine_dmvr_y[1], bit_depth, sub_w, sub_h);
                 if (cost < min_cost)
                 {
                     min_cost = cost;
