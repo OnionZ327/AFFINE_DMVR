@@ -6910,10 +6910,6 @@ void com_affine_dmvr_mc_lc(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*re
                 x_pixel -= half_w;
                 y_pixel -= half_h;
             }
-            if (h == 8)
-            {
-                h = 8;
-            }
             for (int i = -AFFINE_DMVR_ITER_COUNT; i < sub_h + AFFINE_DMVR_ITER_COUNT; i++)
             {
                 for (int j = -AFFINE_DMVR_ITER_COUNT; j < sub_w + AFFINE_DMVR_ITER_COUNT; j++)
