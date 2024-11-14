@@ -6919,7 +6919,7 @@ void com_affine_dmvr_mc_lc(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*re
                     p3 = *(ref_pic->y + ((y_pixel + i) + 1) * ref_pic->stride_luma + (x_pixel + j));
                     p4 = *(ref_pic->y + ((y_pixel + i) + 1) * ref_pic->stride_luma + (x_pixel + j) + 1);
                     interp_horiz = ((16 - x_frac) * p1 + x_frac * p2) >> 4;
-                    interp_vert = ((16 - y_frac) * p3 + y_frac * p4) >> 4;
+                    interp_vert = ((16 - x_frac) * p3 + x_frac * p4) >> 4;
                     pred[w / sub_w * (sub_w + AFFINE_DMVR_ITER_COUNT * 2) + j + AFFINE_DMVR_ITER_COUNT + (i + AFFINE_DMVR_ITER_COUNT) * (MAX_CU_SIZE + (MAX_CU_SIZE >> 3) * AFFINE_DMVR_ITER_COUNT * 2)] = ((16 - y_frac) * interp_horiz + y_frac * interp_vert) >> 4;
                 }
             }
