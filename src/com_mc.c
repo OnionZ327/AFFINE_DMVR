@@ -7007,20 +7007,19 @@ void process_AFFINEDMVR(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)
     int min_cost = INT_MAX;
     SAD_POINT_INDEX idx;
     //÷–…œœ¬◊Û”“
-    s32 search_offset_x[5] = { 0, 0, 0, -1, 1 };
-    s32 search_offset_y[5] = { 0, -1, 1, 0, 0 };
-    s32 j = 0;
-    s32 delta_mvx = 0;
-    s32 delta_mvy = 0;
-    s32 delta_x = 0;
-    s32 delta_y = 0;
-    s32 cost_temp[3][3] = { { INT_MAX, INT_MAX, INT_MAX},
+    int search_offset_x[5] = { 0, 0, 0, -1, 1 };
+    int search_offset_y[5] = { 0, -1, 1, 0, 0 };
+    int delta_mvx = 0;
+    int delta_mvy = 0;
+    int delta_x = 0;
+    int delta_y = 0;
+    int cost_temp[3][3] = { { INT_MAX, INT_MAX, INT_MAX},
     { INT_MAX, INT_MAX, INT_MAX},
     { INT_MAX, INT_MAX, INT_MAX}};
     int dir = 0;
     int last_dir = 0;
-    s32 center_x = 1;
-    s32 center_y = 1;
+    int center_x = 1;
+    int center_y = 1;
     int affine_dmvr_iter_count = 0;
     for (int i = 0; i < REFP_NUM; ++i)
     {
