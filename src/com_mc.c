@@ -7483,6 +7483,7 @@ void process_AFFINEDMVR(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)
     //÷–…œœ¬◊Û”“
     s32 search_offset_x[5] = { 0, 0, 0, -1, 1 };
     s32 search_offset_y[5] = { 0, -1, 1, 0, 0 };
+
     s32 search_square_offset_x[9] = { 0, 0, 0, -1, 1, -1, 1, -1, 1 };
     s32 search_square_offset_y[9] = { 0, -1, 1, 0, 0, -1, -1, 1, 1 };
     s32 j = 0;
@@ -7717,6 +7718,7 @@ void process_AFFINEDMVR(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)
         }
         if (!AFFINE_DMVR_memory_access(mod_info_curr, cu_width, cu_height, refined_mv))
         {
+            min_cost = cost_temp[center_x][center_y];
             break;
         }
 #endif
@@ -7733,6 +7735,7 @@ void process_AFFINEDMVR(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)
     delta_mvx += (delta_x << 4);
     delta_mvy += (delta_y << 4);
 #endif
+
     for (int i = 0; i < REFP_NUM; i++)
     {
         for (int ver = 0; ver < cp_num; ver++)
@@ -7750,7 +7753,6 @@ void process_AFFINEDMVR(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)
         }
     }
 #if AFFINE_DMVR_HALF_SEARCH
-    min_cost = INT_MAX;
     for (int i = 0; i < REFP_NUM; i++)
     {
         for (int ver = 0; ver < cp_num; ver++)
@@ -7768,7 +7770,7 @@ void process_AFFINEDMVR(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)
         }
     }
     dir = 0;
-    for (idx = 0; idx < 9; idx++)
+    for (idx = 1; idx < 5; idx++)
     {
         for (int i = 0; i < REFP_NUM; i++)
         {
@@ -7801,6 +7803,40 @@ void process_AFFINEDMVR(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)
     }
     if (dir != 0)
     {
+        for (idx = 5; idx < 9; idx++)
+        {
+            if ((dir == 1 && (idx == 5 || idx == 6)) || (dir == 2 && (idx == 7 || idx == 8)) || (dir == 3 && (idx == 5 || idx == 7)) || (dir == 4 && (idx == 6 || idx == 8)))
+            {
+                for (int i = 0; i < REFP_NUM; i++)
+                {
+                    for (int ver = 0; ver < cp_num; ver++)
+                    {
+                        if (i == 0)
+                        {
+                            cp_mv[i][ver][MV_X] = initial_mv[i][ver][MV_X] + (search_square_offset_x[idx] << 3);
+                            cp_mv[i][ver][MV_Y] = initial_mv[i][ver][MV_Y] + (search_square_offset_y[idx] << 3);
+                        }
+                        else
+                        {
+                            cp_mv[i][ver][MV_X] = initial_mv[i][ver][MV_X] - (search_square_offset_x[idx] << 3);
+                            cp_mv[i][ver][MV_Y] = initial_mv[i][ver][MV_Y] - (search_square_offset_y[idx] << 3);
+                        }
+                    }
+                }
+
+                for (int i = 0; i < REFP_NUM; ++i)
+                {
+                    com_affine_dmvr_mc_lc(info, mod_info_curr, refp, affine_dmvr_y, cp_mv, sub_w, sub_h, i, bit_depth);
+                }
+
+                cost = com_DAMR_cost(cu_width, cu_height, affine_dmvr_y[0], affine_dmvr_y[1], bit_depth);
+                if (cost < min_cost)
+                {
+                    min_cost = cost;
+                    dir = idx;
+                }
+            }
+        }
 #if AFFINE_MEMORY_CONSTRAINT
         for (int i = 0; i < REFP_NUM; i++)
         {
@@ -7839,6 +7875,10 @@ void process_AFFINEDMVR(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)
                 }
             }
         }
+        else
+        {
+            min_cost = cost_temp[center_x][center_y];
+        }
 #else
         delta_mvx = (search_square_offset_x[dir] << 3);
         delta_mvy = (search_square_offset_y[dir] << 3);
@@ -7859,11 +7899,12 @@ void process_AFFINEDMVR(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)
                 }
             }
         }
+
+
 #endif
     }
 #endif
 #if AFFINE_DMVR_QUARTER_SEARCH
-    min_cost = INT_MAX;
     for (int i = 0; i < REFP_NUM; i++)
     {
         for (int ver = 0; ver < cp_num; ver++)
@@ -7881,7 +7922,7 @@ void process_AFFINEDMVR(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)
         }
     }
     dir = 0;
-    for (idx = 0; idx < 9; idx++)
+    for (idx = 1; idx < 5; idx++)
     {
         for (int i = 0; i < REFP_NUM; i++)
         {
@@ -7914,6 +7955,40 @@ void process_AFFINEDMVR(COM_INFO* info, COM_MODE* mod_info_curr, COM_REFP(*refp)
     }
     if (dir != 0)
     {
+        for (idx = 5; idx < 9; idx++)
+        {
+            if ((dir == 1 && (idx == 5 || idx == 6)) || (dir == 2 && (idx == 7 || idx == 8)) || (dir == 3 && (idx == 5 || idx == 7)) || (dir == 4 && (idx == 6 || idx == 8)))
+            {
+                for (int i = 0; i < REFP_NUM; i++)
+                {
+                    for (int ver = 0; ver < cp_num; ver++)
+                    {
+                        if (i == 0)
+                        {
+                            cp_mv[i][ver][MV_X] = initial_mv[i][ver][MV_X] + (search_square_offset_x[idx] << 2);
+                            cp_mv[i][ver][MV_Y] = initial_mv[i][ver][MV_Y] + (search_square_offset_y[idx] << 2);
+                        }
+                        else
+                        {
+                            cp_mv[i][ver][MV_X] = initial_mv[i][ver][MV_X] - (search_square_offset_x[idx] << 2);
+                            cp_mv[i][ver][MV_Y] = initial_mv[i][ver][MV_Y] - (search_square_offset_y[idx] << 2);
+                        }
+                    }
+                }
+
+                for (int i = 0; i < REFP_NUM; ++i)
+                {
+                    com_affine_dmvr_mc_lc(info, mod_info_curr, refp, affine_dmvr_y, cp_mv, sub_w, sub_h, i, bit_depth);
+                }
+
+                cost = com_DAMR_cost(cu_width, cu_height, affine_dmvr_y[0], affine_dmvr_y[1], bit_depth);
+                if (cost < min_cost)
+                {
+                    min_cost = cost;
+                    dir = idx;
+                }
+            }
+        }
 #if AFFINE_MEMORY_CONSTRAINT
         for (int i = 0; i < REFP_NUM; i++)
         {
