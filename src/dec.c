@@ -1356,6 +1356,7 @@ static int dec_eco_unit(DEC_CTX * ctx, DEC_CORE * core, int x, int y, int cu_wid
                 }
             }
 #endif
+            int affine_dmvr_poc_c = ctx->ptr;
             com_affine_mc(&ctx->info, mod_info_curr, ctx->refp, &ctx->map, bit_depth);
 #if OBMC
             if (ctx->info.sqh.obmc_enable_flag)

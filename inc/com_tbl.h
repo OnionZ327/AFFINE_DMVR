@@ -96,6 +96,10 @@ extern const s16 tbl_mc_c_coeff_hp[32][4];
 extern const s16 tbl_mc_l_coeff[4][8];
 extern const s16 tbl_mc_c_coeff[8][4];
 
+#if AFFINE_DMVR
+extern const s16 tbl_affine_mc_l_coeff_hp_2tap[16][2];
+#endif
+
 #if IF_LUMA12_CHROMA6
 extern const s16 tbl_mc_l_coeff_hp_12tap[16][12];
 extern const s16 tbl_mc_l_coeff_12tap[4][12];

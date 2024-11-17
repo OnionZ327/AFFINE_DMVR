@@ -37,6 +37,20 @@
 #include "com_typedef.h"
 #include "com_port.h"
 
+#if AFFINE_DMVR
+#define AFFINE_DMVR_ITER_COUNT             4//像素搜索次数
+#define AFFINE_DMVR_2TAP                   1//2-tap插值开关
+#define AFFINE_DMVR_HALF_SEARCH            1//半像素搜索开关
+#define AFFINE_DMVR_QUARTER_SEARCH         1//1/4像素搜索开关
+#define AFFINE_DMVR_PRE                    1//预插值开关
+#if !AFFINE_DMVR_PRE
+#define AFFINE_SEARCH_STEP                 2//2->1/4, 4->1
+#endif
+#endif
+#if AFFINE_PARA
+#define AFFINE_PARA_ITER_COUNT             3
+#endif
+
 #if TSCPM
 #define MAX_INT                     2147483647  ///< max. value of signed 32-bit integer
 #endif
@@ -301,12 +315,6 @@
 #endif
 /* DMVR_AVS2 (END) */
 
-#if AFFINE_DMVR
-#define AFFINE_DMVR_ITER_COUNT             3
-#endif
-#if AFFINE_PARA
-#define AFFINE_PARA_ITER_COUNT             1
-#endif
 /* IC_AVS3 (START) */
 #if IPC
 #define NUM_RDO_WITH_IPC                    6        // number of additional RDO
@@ -2714,6 +2722,14 @@ typedef enum _AWP_ANGLE_RATIO
     AWP_ANGLE_HOR,
     AWP_ANGLE_VER
 } AWP_ANGLE_RATIO;
+#endif
+
+
+#if AFFINE_DMVR_PRE
+#define AFFINE_DMVR_PRE_PAD_WIDTH                       (AFFINE_DMVR_ITER_COUNT & 3 ? ((AFFINE_DMVR_ITER_COUNT >> 2) + 1) << 2 : AFFINE_DMVR_ITER_COUNT) * 2
+#define AFFINE_DMVR_PRE_PAD_HEIGHT                      (2 * AFFINE_DMVR_ITER_COUNT)
+#define AFFINE_DMVR_PAD_BUFFER_WIDTH                    (MAX_CU_SIZE + (MAX_CU_SIZE >> 3) * AFFINE_DMVR_PRE_PAD_WIDTH)
+#define AFFINE_DMVR_PAD_BUFFER_HEIGHT                   (MAX_CU_SIZE + (MAX_CU_SIZE >> 3) * AFFINE_DMVR_PRE_PAD_HEIGHT)
 #endif
 
 #if DMVR

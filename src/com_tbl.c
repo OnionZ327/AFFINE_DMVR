@@ -234,7 +234,27 @@ const int com_tbl_dq_shift[80] =   // [64 + 16]
     6,  6,  6,  6,  6,  6,  6,  6,  // 7,  7,  7,  7,  7,  7,  7,  7,
     5,  5,  5,  5,  5,  5,  5,  5,  // 6,  6,  6,  6,  6,  6,  6,  6
 };
+#if AFFINE_DMVR
+const s16 tbl_affine_mc_l_coeff_hp_2tap[16][2] = {
+    {16, 0},  // frac = 0
+    {15, 1},  // frac = 1
+    {14, 2},  // frac = 2
+    {13, 3},  // frac = 3
+    {12, 4},  // frac = 4
+    {11, 5},  // frac = 5
+    {10, 6},  // frac = 6
+    {9, 7},   // frac = 7
+    {8, 8},   // frac = 8
+    {7, 9},   // frac = 9
+    {6, 10},  // frac = 10
+    {5, 11},  // frac = 11
+    {4, 12},  // frac = 12
+    {3, 13},  // frac = 13
+    {2, 14},  // frac = 14
+    {1, 15}   // frac = 15
+};
 
+#endif
 #if IF_LUMA12_CHROMA6
 const s16 tbl_mc_l_coeff_hp_12tap[16][12] =
 {
