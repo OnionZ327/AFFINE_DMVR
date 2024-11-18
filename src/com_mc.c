@@ -978,7 +978,8 @@ static void mc_filter_l_2tap_vert_clip_sse(
     int width,
     int height,
     int min_val,
-    int max_val
+    int max_val,
+    s8 is_last
 )
 {
     int row, col;
@@ -1015,8 +1016,11 @@ static void mc_filter_l_2tap_vert_clip_sse(
             // 打包结果到 16 位
             __m128i final_result = _mm_packs_epi32(result_lo, result_hi);
 
-            final_result = _mm_min_epi16(final_result, mm_max);
-            final_result = _mm_max_epi16(final_result, mm_min);
+            if (is_last)
+            {
+                final_result = _mm_min_epi16(final_result, mm_max);
+                final_result = _mm_max_epi16(final_result, mm_min);
+            }
 
             // 存储结果
             _mm_storeu_si128((__m128i*)(dst_copy + cnt), final_result);
@@ -1036,7 +1040,8 @@ static void mc_filter_l_2tap_horiz_clip_sse(
     int width,
     int height,
     int min_val,
-    int max_val
+    int max_val,
+    s8 is_last
 )
 {
     int row, col;
@@ -1073,9 +1078,11 @@ static void mc_filter_l_2tap_horiz_clip_sse(
             // 打包结果
             __m128i final_result = _mm_packs_epi32(result_lo, result_hi);
 
-            // 裁剪到 min 和 max
-            final_result = _mm_min_epi16(final_result, mm_max);
-            final_result = _mm_max_epi16(final_result, mm_min);
+            if (is_last)
+            {
+                final_result = _mm_min_epi16(final_result, mm_max);
+                final_result = _mm_max_epi16(final_result, mm_min);
+            }
 
             // 存储结果
             _mm_storeu_si128((__m128i*)(dst_copy + cnt), final_result);
@@ -1084,56 +1091,6 @@ static void mc_filter_l_2tap_horiz_clip_sse(
         }
         inp_copy += stored_alf_para_num;
         dst_copy += dst_stride;
-    }
-}
-void mc_filter_combined_2tap_sse(
-    s16* ref, int s_ref, s16* pred, int s_pred,
-    const s16* coeff_hor, const s16* coeff_ver,
-    int width, int height, int min_val, int max_val
-) {
-    int row, col;
-    for (row = 0; row < height - 1; row++) {
-        for (col = 0; col < width - 1; col += 8) {
-            // 加载水平和垂直需要的源数据
-            __m128i s0_hor = _mm_loadu_si128((__m128i*)(ref + col));
-            __m128i s1_hor = _mm_loadu_si128((__m128i*)(ref + col + 1));
-            __m128i s0_ver = _mm_loadu_si128((__m128i*)(ref + s_ref + col));
-            __m128i s1_ver = _mm_loadu_si128((__m128i*)(ref + s_ref + col + 1));
-
-            // 计算水平方向插值
-            __m128i res_hor0 = _mm_unpacklo_epi16(s0_hor, s1_hor);
-            __m128i res_hor1 = _mm_unpackhi_epi16(s0_hor, s1_hor);
-            __m128i result_hor_lo = _mm_madd_epi16(res_hor0, _mm_set_epi16(coeff_hor[1], coeff_hor[0], coeff_hor[1], coeff_hor[0], coeff_hor[1], coeff_hor[0], coeff_hor[1], coeff_hor[0]));
-            __m128i result_hor_hi = _mm_madd_epi16(res_hor1, _mm_set_epi16(coeff_hor[1], coeff_hor[0], coeff_hor[1], coeff_hor[0], coeff_hor[1], coeff_hor[0], coeff_hor[1], coeff_hor[0]));
-
-            // 计算垂直方向插值
-            __m128i res_ver0 = _mm_unpacklo_epi16(s0_ver, s1_ver);
-            __m128i res_ver1 = _mm_unpackhi_epi16(s0_ver, s1_ver);
-            __m128i result_ver_lo = _mm_madd_epi16(res_ver0, _mm_set_epi16(coeff_ver[1], coeff_ver[0], coeff_ver[1], coeff_ver[0], coeff_ver[1], coeff_ver[0], coeff_ver[1], coeff_ver[0]));
-            __m128i result_ver_hi = _mm_madd_epi16(res_ver1, _mm_set_epi16(coeff_ver[1], coeff_ver[0], coeff_ver[1], coeff_ver[0], coeff_ver[1], coeff_ver[0], coeff_ver[1], coeff_ver[0]));
-
-            // 将结果右移移位除以 16
-            result_hor_lo = _mm_srai_epi32(result_hor_lo, 4);
-            result_hor_hi = _mm_srai_epi32(result_hor_hi, 4);
-            result_ver_lo = _mm_srai_epi32(result_ver_lo, 4);
-            result_ver_hi = _mm_srai_epi32(result_ver_hi, 4);
-
-            // 合并结果并打包成 16 位
-            __m128i final_result_hor = _mm_packs_epi32(result_hor_lo, result_hor_hi);
-            __m128i final_result_ver = _mm_packs_epi32(result_ver_lo, result_ver_hi);
-
-            // 在某种情况下合并水平方向和垂直方向的结果
-            __m128i final_result = _mm_avg_epu16(final_result_hor, final_result_ver);
-
-            // 裁剪到最小和最大值
-            final_result = _mm_min_epi16(final_result, _mm_set1_epi16(max_val));
-            final_result = _mm_max_epi16(final_result, _mm_set1_epi16(min_val));
-
-            // 存储结果
-            _mm_storeu_si128((__m128i*)(pred + col), final_result);
-        }
-        ref += s_ref;
-        pred += s_pred;
     }
 }
 
@@ -4385,7 +4342,7 @@ void com_affine_mc_l_n0(pel* ref, int gmv_x, int gmv_y, int s_ref, int s_pred, p
 #else
     ref += (gmv_y >> 4) * s_ref + (gmv_x >> 4);
 #endif
-    mc_filter_l_2tap_horiz_clip_sse(ref, s_ref, pred, s_pred, coeff_hor, w, h, min, max);
+    mc_filter_l_2tap_horiz_clip_sse(ref, s_ref, pred, s_pred, coeff_hor, w, h, min, max, 1);
 #else
 #if IF_LUMA12_CHROMA6
     const int offset = 5;
@@ -4427,7 +4384,7 @@ void com_affine_mc_l_0n(pel* ref, int gmv_x, int gmv_y, int s_ref, int s_pred, p
 #else
     ref += (gmv_y >> 4) * s_ref + (gmv_x >> 4);
 #endif
-    mc_filter_l_2tap_vert_clip_sse(ref, s_ref, pred, s_pred, coeff_ver, w, h, min, max);
+    mc_filter_l_2tap_vert_clip_sse(ref, s_ref, pred, s_pred, coeff_ver, w, h, min, max, 1);
 #else
 #if IF_LUMA12_CHROMA6
     const int offset = 5;
@@ -4467,14 +4424,14 @@ void com_affine_mc_l_nn(s16* ref, int gmv_x, int gmv_y, int s_ref, int s_pred, s
     const s16* coeff_hor = tbl_affine_mc_l_coeff_hp_2tap[dx];
     const s16* coeff_ver = tbl_affine_mc_l_coeff_hp_2tap[dy];
 #if AFFINE_DMVR_PRE
-    static s16 buf[AFFINE_DMVR_PAD_BUFFER_WIDTH * AFFINE_DMVR_PAD_BUFFER_HEIGHT];
     ref += ((gmv_y >> 4) - AFFINE_DMVR_ITER_COUNT) * s_ref + (gmv_x >> 4) - AFFINE_DMVR_ITER_COUNT;
 #else
-    static s16 buf[MAX_CU_SIZE* MAX_CU_SIZE];
     ref += (gmv_y >> 4) * s_ref + (gmv_x >> 4);
 #endif
-    mc_filter_l_2tap_horiz_clip_sse(ref, s_ref, buf, w, coeff_hor, w, h, min, max);
-    mc_filter_l_2tap_vert_clip_sse(buf, w, pred, s_pred, coeff_ver, w, h, min, max);
+    s16* buf = (s16*)malloc(w * (h + 1) * sizeof(s16));
+    mc_filter_l_2tap_horiz_clip_sse(ref, s_ref, buf, w, coeff_hor, w, h + 1, min, max, 0);
+    mc_filter_l_2tap_vert_clip_sse(buf, w, pred, s_pred, coeff_hor, w, h, min, max, 1);
+    free(buf);
 #else
 #if IF_LUMA12_CHROMA6
     const int offset = 5;

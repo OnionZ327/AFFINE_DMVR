@@ -253,7 +253,6 @@ const s16 tbl_affine_mc_l_coeff_hp_2tap[16][2] = {
     {2, 14},  // frac = 14
     {1, 15}   // frac = 15
 };
-
 #endif
 #if IF_LUMA12_CHROMA6
 const s16 tbl_mc_l_coeff_hp_12tap[16][12] =
