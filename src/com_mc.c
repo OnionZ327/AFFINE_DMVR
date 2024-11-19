@@ -4430,7 +4430,7 @@ void com_affine_mc_l_nn(s16* ref, int gmv_x, int gmv_y, int s_ref, int s_pred, s
 #endif
     s16* buf = (s16*)malloc(w * (h + 1) * sizeof(s16));
     mc_filter_l_2tap_horiz_clip_sse(ref, s_ref, buf, w, coeff_hor, w, h + 1, min, max, 0);
-    mc_filter_l_2tap_vert_clip_sse(buf, w, pred, s_pred, coeff_hor, w, h, min, max, 1);
+    mc_filter_l_2tap_vert_clip_sse(buf, w, pred, s_pred, coeff_ver, w, h, min, max, 1);
     free(buf);
 #else
 #if IF_LUMA12_CHROMA6
